@@ -2,9 +2,15 @@
 #include <string>
 #include <iostream>
 
-string getFinnish(string wordEnglish);
+std::string getFinnish(std::string wordEnglish);
 
 int main() {
+    
+  std::cout << getFinnish("star");
+
+}
+
+std::string getFinnish(std::string wordEnglish){
   CsvParser csv("english_finnish.csv");
 
   for (std::string i : csv.get_mathching_finnish(
@@ -12,8 +18,4 @@ int main() {
                       // translation of a word.
     std::cout << "Match found: " << i << std::endl;
   }
-}
-
-string getFinnish(string wordEnglish){
-  
 }
