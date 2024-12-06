@@ -8,8 +8,8 @@ std::string getFinnish(std::string wordEnglish);
 
 int main() {
 
-  std::cout << getFinnish("Finland") << std::endl;
-  
+  std::cout << getFinnish("nice") << std::endl;
+
 }
 
 std::string getFinnish(std::string wordEnglish) {
