@@ -8,23 +8,30 @@ void pointerMover(int line);
 
 int main() {
 
-  std::string wordEng;
-  getline(readEngFin, wordEng, '|');
+  while (true) {
 
-  std::string wordFin;
-  getline(readEngFin, wordFin, '|');
+    srand(time(0));
 
-  std::string wordFinInput;
-  std::cout << "What is the Finnish word for " << wordEng << "? ";
-  std::cin >> wordFinInput;
+    int randomNum = rand() % 3;
 
-  if (wordFinInput == wordFin) {
-    std::cout << "Good Job!" << std::endl;
-  } else {
-    std::cout << "No :(" << std::endl;
-  };
+    std::string wordEng;
+    getline(readEngFin, wordEng, '|');
 
-  return 0; 
+    std::string wordFin;
+    getline(readEngFin, wordFin, '|');
+
+    std::string wordFinInput;
+    std::cout << "What is the Finnish word for " << wordEng << "? ";
+    std::cin >> wordFinInput;
+
+    if (wordFinInput == wordFin) {
+      std::cout << "Good Job!" << std::endl;
+    } else {
+      std::cout << "No :(" << std::endl;
+    };
+  }
+
+  return 0;
 }
 
 void pointerMover(int k) {
