@@ -1,7 +1,10 @@
 #include <fstream>
 #include <iostream>
+#include <string>
 
 std::ifstream readEngFin("wordsEngFin.txt");
+
+void pointerMover(int line);
 
 int main() {
 
@@ -21,5 +24,19 @@ int main() {
     std::cout << "No :(" << std::endl;
   };
 
-  return 0;
+  return 0; 
+}
+
+void pointerMover(int k) {
+
+  int currentLine = 0;
+
+  std::string line;
+
+  while (std::getline(readEngFin, line, '\n')) {
+    currentLine++;
+    if (currentLine == k) {
+      break;
+    }
+  }
 }
