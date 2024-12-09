@@ -8,6 +8,8 @@ void englishFinnish();
 void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
 void getEngFin(int k);
+std::string getEng(int line);
+std::string getFin(int line);
 
 std::ifstream readEngFin("wordsEngFin.txt");
 
@@ -19,10 +21,16 @@ std::list<std::string> noList = {"no",  "No",  "nah", "Nah",
                                  "nei", "Nei", "nee", "Nee"};
 std::list<std::string> yesList = {"Yes", "yes", "Yeah", "yeah",
                                   "Yea", "yea", "Ye",   "ye"};
+struct {
+  int correct;
+  int incorrect;
+} Score;
 
 int main() {
 
-  std::cout << "How many words do you want to practise (the current list contains " << maxLine << " words)? ";
+  std::cout
+      << "How many words do you want to practise (the current list contains "
+      << maxLine << " words)? ";
   std::cin >> wordsTrained;
 
   while (true) {
@@ -46,6 +54,8 @@ int main() {
 
   englishFinnish();
 
+  Score.correct, Score.incorrect = 0;
+
   return 0;
 }
 
@@ -58,7 +68,7 @@ void englishFinnish() {
   if (randomPractise) {
     while (true) {
 
-      //Get random sequence n
+      // Get random sequence n
       std::vector<int> randomSequence;
 
       getEngFin(randomSequence.at(0));
@@ -87,7 +97,7 @@ void englishFinnish() {
       };
 
       if (i > maxLine) {
-        readEngFin.seekg(0,std::ifstream::beg);  
+        readEngFin.seekg(0, std::ifstream::beg);
       }
     }
   }
@@ -123,24 +133,47 @@ bool listChecker(std::list<std::string> searchedList,
 }
 
 void getEngFin(int k) {
-  pointerMover(readEngFin, k);
+  std::string wordEng = getEng(k);
+
+  std::string wordFin = getFin(k);
+
+  std::string wordFinInput;
+  std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
+  std::cin >> wordFinInput;
+  std::cout << std::endl;
+
+  if (wordFinInput == wordFin) {
+    std::cout << "Yes! :)" << std::endl;
+    Score.correct += 1;
+  } else {
+    std::cout << "No :(" << std::endl;
+    Score.incorrect += 1;
+  };
+  std::cout << "Your score: (correct / incorrect) (" << Score.correct << " / "
+            << Score.incorrect << ")" << std::endl;
+}
+
+std::string getEng(int line) {
+
+  pointerMover(readEngFin, line);
 
   std::string wordEng;
   getline(readEngFin, wordEng, '|');
+
+  return wordEng;
+}
+
+std::string getFin(int line) {
+
+  pointerMover(readEngFin, line);
+
+  std::string buffer;
+  getline(readEngFin, buffer, '|');
 
   readEngFin.seekg(1, std::ifstream::cur);
 
   std::string wordFin;
   getline(readEngFin, wordFin, '|');
 
-  std::string wordFinInput;
-  std::cout << "What is the Finnish word for " << wordEng << "? " << std::endl;
-  std::cin >> wordFinInput;
-  std::cout << std::endl;
-
-  if (wordFinInput == wordFin) {
-    std::cout << "Yes! :)" << std::endl;
-  } else {
-    std::cout << "No :(" << std::endl;
-  };
+  return wordFin;
 }
