@@ -62,5 +62,7 @@
 
     
   },
-  "window.autoDetectColorScheme": false
+  "window.autoDetectColorScheme": false,
+  "workbench.colorTheme": "Abyss",
+  "workbench.preferredDarkColorTheme": "Abyss"
 }
