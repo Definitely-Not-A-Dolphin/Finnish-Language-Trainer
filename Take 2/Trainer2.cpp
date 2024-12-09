@@ -1,3 +1,4 @@
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -8,7 +9,7 @@ void englishFinnish();
 void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
 void getEngFin(int k);
-void grade();
+std::string gradeMessage(double grade);
 std::string getEng(int line);
 std::string getFin(int line);
 
@@ -36,6 +37,8 @@ struct {
 
 int main() {
 
+  while (true) {
+
   std::cout
       << "How many words do you want to practise (the current list contains "
       << maxLine << " words)? ";
@@ -62,9 +65,20 @@ int main() {
 
   englishFinnish();
 
-  void grade();
+  double grade = (Score.correct / wordsTrained) * 9 + 1;
+  std::cout << gradeMessage(grade);
 
   Score.correct, Score.incorrect = 0;
+
+  std::string repeat;
+  std::cout << std::endl << "Do you want to try again? " << std::endl;
+  std::cin >> repeat;
+
+  if (listChecker(List.no, repeat)) {
+    break;
+  }
+
+  }
 
   return 0;
 }
@@ -163,26 +177,18 @@ void getEngFin(int k) {
             << ")" << std::endl;
 }
 
-void grade() {
-  double grade = (Score.correct / wordsTrained) * 9 + 1;
+std::string gradeMessage(double grade) {
   std::cout << std::endl << "Your grade is: " << grade << "/10" << std::endl;
 
-  std::string gradeMessage;
+  std::vector<std::string> gradeMessage = {
+      "This is too hard for you. Have you considered Swedish?",
+      "Were you even trying?",
+      "I would consider that not very good.",
+      "It's okay, could be better.",
+      "Solid grade!",
+      "Wow, good job!"};
 
-  if (grade == 10) {
-    gradeMessage = "Wow, good job!";
-  } else if (8 <= grade < 10) {
-    gradeMessage = "Solid grade!";
-  } else if (6 <= grade < 8) {
-    gradeMessage = "It's okay, could be better.";
-  } else if (4 <= grade < 6) {
-    gradeMessage = "I would consider that not very good.";
-  } else if (2 <= grade < 4) {
-    gradeMessage = "Were you even trying?";
-  } else {
-    gradeMessage = "This is too hard for you. Have you considered Swedish?";
-  };
-  std::cout << gradeMessage << std::endl;
+  return gradeMessage.at((int) floor(grade / 2));
 }
 
 std::string getEng(int line) {
