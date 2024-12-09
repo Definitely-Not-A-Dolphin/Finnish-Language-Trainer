@@ -8,6 +8,7 @@ void englishFinnish();
 void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
 void getEngFin(int k);
+void grade();
 std::string getEng(int line);
 std::string getFin(int line);
 
@@ -23,9 +24,9 @@ struct {
 
 struct {
   std::list<std::string> no = {"No",  "no",  "Nah", "nah",
-                                 "Nei", "nei", "Nee", "nee"};
+                               "Nei", "nei", "Nee", "nee"};
   std::list<std::string> yes = {"Yes", "yes", "Yeah", "yeah", "Yea",
-                                  "yea", "Ye",  "ye",   "Ja",   "ja"};
+                                "yea", "Ye",  "ye",   "Ja",   "ja"};
 } List;
 
 struct {
@@ -60,6 +61,8 @@ int main() {
   }
 
   englishFinnish();
+
+  void grade();
 
   Score.correct, Score.incorrect = 0;
 
@@ -156,8 +159,30 @@ void getEngFin(int k) {
     std::cout << "No :(" << std::endl;
     Score.incorrect += 1;
   };
-  std::cout << "Your score: (correct / incorrect) (" << Score.correct << " / "
-            << Score.incorrect << ")" << std::endl;
+  std::cout << "Your score: (" << Score.correct << " / " << Score.incorrect
+            << ")" << std::endl;
+}
+
+void grade() {
+  double grade = (Score.correct / wordsTrained) * 9 + 1;
+  std::cout << std::endl << "Your grade is: " << grade << "/10" << std::endl;
+
+  std::string gradeMessage;
+
+  if (grade == 10) {
+    gradeMessage = "Wow, good job!";
+  } else if (8 <= grade < 10) {
+    gradeMessage = "Solid grade!";
+  } else if (6 <= grade < 8) {
+    gradeMessage = "It's okay, could be better.";
+  } else if (4 <= grade < 6) {
+    gradeMessage = "I would consider that not very good.";
+  } else if (2 <= grade < 4) {
+    gradeMessage = "Were you even trying?";
+  } else {
+    gradeMessage = "This is too hard for you. Have you considered Swedish?";
+  };
+  std::cout << gradeMessage << std::endl;
 }
 
 std::string getEng(int line) {
