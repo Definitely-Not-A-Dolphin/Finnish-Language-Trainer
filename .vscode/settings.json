@@ -62,4 +62,9 @@
     
   },
   "window.autoDetectColorScheme": false
+=======
+
+  },
+  "workbench.editor.decorations.colors": true
+>>>>>>> Stashed changes
 }
