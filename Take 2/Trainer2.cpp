@@ -15,12 +15,19 @@ std::ifstream readEngFin("wordsEngFin.txt");
 
 int wordsTrained;
 int maxLine = 50;
-bool infinitePractise;
-bool randomPractise;
-std::list<std::string> noList = {"no",  "No",  "nah", "Nah",
-                                 "nei", "Nei", "nee", "Nee"};
-std::list<std::string> yesList = {"Yes", "yes", "Yeah", "yeah",
-                                  "Yea", "yea", "Ye",   "ye"};
+
+struct {
+  bool infinite;
+  bool random;
+} Practise;
+
+struct {
+  std::list<std::string> no = {"No",  "no",  "Nah", "nah",
+                                 "Nei", "nei", "Nee", "nee"};
+  std::list<std::string> yes = {"Yes", "yes", "Yeah", "yeah", "Yea",
+                                  "yea", "Ye",  "ye",   "Ja",   "ja"};
+} List;
+
 struct {
   int correct;
   int incorrect;
@@ -38,11 +45,11 @@ int main() {
     std::cout << "Do you want to randomise the words? ";
     std::cin >> answerRandom;
 
-    if (listChecker(yesList, answerRandom)) {
-      randomPractise = true;
+    if (listChecker(List.yes, answerRandom)) {
+      Practise.random = true;
       break;
-    } else if (listChecker(noList, answerRandom)) {
-      randomPractise = false;
+    } else if (listChecker(List.no, answerRandom)) {
+      Practise.random = false;
       break;
     } else {
       std::cout
@@ -65,7 +72,7 @@ void englishFinnish() {
 
   int i = 1;
 
-  if (randomPractise) {
+  if (Practise.random) {
     while (true) {
 
       // Get random sequence n
@@ -76,7 +83,7 @@ void englishFinnish() {
       counter = counter + 1;
 
       if (i > maxLine) {
-        if (infinitePractise = false) {
+        if (Practise.infinite = false) {
           break;
         } else {
           i = 1;
