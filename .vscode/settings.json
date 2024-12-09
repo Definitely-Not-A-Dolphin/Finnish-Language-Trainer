@@ -54,5 +54,11 @@
     "typeinfo": "cpp",
     "variant": "cpp",
     "list": "cpp"
-  }
+  },
+  "workbench.colorCustomizations": {
+  "[GitHub Dark Default]": {}
+
+    
+  },
+  "window.autoDetectColorScheme": false
 }
