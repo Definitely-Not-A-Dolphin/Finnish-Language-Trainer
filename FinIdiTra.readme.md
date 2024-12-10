@@ -4,3 +4,5 @@ To do list:
 - Practising numbers
 - My answer was correct button
 - Words in different cases
+- Practicing verbs
+- Practicing komparatiivi & superlatiivi
