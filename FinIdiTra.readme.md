@@ -4,4 +4,3 @@ To do list:
 - Practising numbers
 - My answer was correct button
 - Words in different cases
-- Practise Finnish to English
