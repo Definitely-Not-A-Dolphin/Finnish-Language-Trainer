@@ -20,13 +20,12 @@ std::string gradeMessage(double grade);
 std::string getEng(int line);
 std::string getFin(int line, int finCase);
 
-std::ifstream readEngFin("nounsEngFin.csv");
-
 int maxLine = 50;
 
 // Questions
 std::string EngOrFin;
-int wordsTrained;
+double wordsTrained;
+int wordType;
 
 struct {
   bool infinite;
@@ -42,14 +41,22 @@ struct {
                                      "english"};
   std::list<std::string> cases = {
       "Nominatiivi", "Genitiivi", "Akkusatiivi", "Partitiivi",
-      "nominatiivi", "genitiivi", "akkusatiivi", "partitiivi",
-  };
+      "nominatiivi", "genitiivi", "akkusatiivi", "partitiivi"};
 } List;
 
 struct {
-  int correct;
+  std::vector<std::string> wordType = {
+      "adverbsEngFin.csv",  "nounsEngFin.csv", "numbersEngFin.csv",
+      "pronounsEngFin.csv", "verbsEngFin.csv", "otherEngFin.csv",
+  };
+} Vector;
+
+struct {
+  double correct;
   int incorrect;
 } Score;
+
+std::ifstream readEngFin(Vector.wordType.at(wordType - 1)); 
 
 int main() {
 
@@ -57,10 +64,31 @@ int main() {
 
   while (true) {
 
+    // Word Type
+    while (true) {
+      std::cout << "What type of word would you like to practise? " << std::endl
+                << "  Adverbs (type 1), " << std::endl
+                << "  Nouns (type 2), " << std::endl
+                << "  Numbers (type 3), " << std::endl
+                << "  Pronouns (type 4), " << std::endl
+                << "  Verbs (type 5), " << std::endl
+                << "  Other (type 6), " << std::endl;
+      std::cin >> wordType;
+
+      if (1 <= wordType <= 6) {
+        break;
+      } else {
+        std::cout << std::endl
+                  << "Sorry, I could not understand that. Please re-enter your "
+                     "answer."
+                  << std::endl;
+      }
+    };
+
     // English or Finnish
     while (true) {
       std::cout
-          << "Would you like to practise Finnish words or English words? ";
+          << "What language would you like to practise? ";
       std::cin >> EngOrFin;
 
       if (listChecker(List.language, EngOrFin)) {
@@ -83,7 +111,7 @@ int main() {
                   << "  Akkusatiivi (type 4), " << std::endl;
         std::cin >> finCase;
 
-        if (1 <= finCase and finCase <= 4) {
+        if (1 <= finCase <= 4) {
           break;
         } else {
           std::cout
@@ -125,8 +153,11 @@ int main() {
       practiseFinnish(finCase);
     } else {
       practiseEnglish();
-    }
+    };
+    
+    std::cout << Score.correct << std::endl << wordsTrained << std::endl;
     double grade = (Score.correct / wordsTrained) * 9 + 1;
+    std::cout << grade << std::endl;
     std::cout << gradeMessage(grade) << std::endl;
 
     Score.correct, Score.incorrect = 0;
@@ -134,6 +165,8 @@ int main() {
     std::string repeat;
     std::cout << std::endl << "Do you want to try again? " << std::endl;
     std::cin >> repeat;
+
+    readEngFin.close();
 
     if (listChecker(List.no, repeat)) {
       break;
@@ -182,6 +215,7 @@ void practiseEnglish() {
 
       if (i > maxLine) {
         readEngFin.seekg(0, std::ifstream::beg);
+        pointerMover(readEngFin, 2);
       }
     }
   }
@@ -226,6 +260,7 @@ void practiseFinnish(int finCase) {
 
       if (i > maxLine) {
         readEngFin.seekg(0, std::ifstream::beg);
+        pointerMover(readEngFin, 2);
       }
     }
   }
@@ -277,7 +312,7 @@ void getEngFin(int k, int finCase) {
     std::cout << "No :( The correct word was " << wordFin << std::endl;
     Score.incorrect += 1;
   };
-  std::cout << "Your score: (" << Score.correct << " / " << Score.incorrect
+  std::cout << "Your current score: (" << Score.correct << " / " << Score.incorrect
             << ")" << std::endl;
 }
 
@@ -299,7 +334,7 @@ void getFinEng(int k) {
     std::cout << "No :(" << std::endl;
     Score.incorrect += 1;
   };
-  std::cout << "Your score: (" << Score.correct << " / " << Score.incorrect
+  std::cout << "Your current score: (" << Score.correct << " / " << Score.incorrect
             << ")" << std::endl;
 }
 
