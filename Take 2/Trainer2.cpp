@@ -6,23 +6,23 @@
 #include <string>
 #include <vector>
 
-void practiseWords(std::string way);
+void practiseEnglish();
+void practiseFinnish(int finCase);
 void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
-void getEngFin(int k);
+void getEngFin(int k, int finCase);
 void getFinEng(int k);
 std::string getElement(int row, int column);
 std::string gradeMessage(double grade);
 std::string getEng(int line);
-std::string getFin(int line);
+std::string getFin(int line, int finCase);
 
 std::ifstream readEngFin("wordsEngFin.csv");
 
 int maxLine = 50;
 
-//Questions
+// Questions
 std::string EngOrFin;
-int finCase;
 int wordsTrained;
 
 struct {
@@ -50,6 +50,8 @@ struct {
 
 int main() {
 
+  int finCase;
+
   while (true) {
 
     // English or Finnish
@@ -74,8 +76,8 @@ int main() {
         std::cout << "What case would you like to practise? " << std::endl
                   << "  Nominatiivi (type 1), " << std::endl
                   << "  Genitiivi (type 2), " << std::endl
-                  << "  Akkusatiivi (type 3), " << std::endl
-                  << "  Partitiivi (type 4), " << std::endl;
+                  << "  Partitiivi (type 3), " << std::endl
+                  << "  Akkusatiivi (type 4), " << std::endl;
 
         if (1 <= finCase and finCase <= 4) {
           break;
@@ -115,8 +117,11 @@ int main() {
       }
     }
 
-    practiseWords(EngOrFin);
-
+    if (EngOrFin == "Finnish" or EngOrFin == "finnish") {
+      practiseEnglish();
+    } else {
+      practiseFinnish(finCase);
+    }
     double grade = (Score.correct / wordsTrained) * 9 + 1;
     std::cout << gradeMessage(grade) << std::endl;
 
@@ -134,7 +139,7 @@ int main() {
   return 0;
 }
 
-void practiseWords(std::string way) {
+void practiseEnglish() {
 
   int counter = 0;
 
@@ -146,11 +151,7 @@ void practiseWords(std::string way) {
       // Get random sequence n
       std::vector<int> randomSequence;
 
-      if (way == "Finnish" or way == "finnish") {
-        getEngFin(randomSequence.at(0));
-      } else {
-        getFinEng(randomSequence.at(0));
-      };
+      getFinEng(randomSequence.at(0));
 
       counter = counter + 1;
 
@@ -165,11 +166,51 @@ void practiseWords(std::string way) {
   } else {
     while (true) {
 
-      if (way == "Finnish" or way == "finnish") {
-        getEngFin(i);
-      } else {
-        getFinEng(i);
+      getFinEng(i);
+
+      counter = counter + 1;
+
+      i = i + 1;
+
+      if (counter == wordsTrained) {
+        break;
       };
+
+      if (i > maxLine) {
+        readEngFin.seekg(0, std::ifstream::beg);
+      }
+    }
+  }
+}
+
+void practiseFinnish(int finCase) {
+
+  int counter = 0;
+
+  int i = 2;
+
+  if (Practise.random) {
+    while (true) {
+
+      // Get random sequence n
+      std::vector<int> randomSequence;
+
+      getEngFin(randomSequence.at(0), finCase);
+
+      counter = counter + 1;
+
+      if (i > maxLine) {
+        if (Practise.infinite = false) {
+          break;
+        } else {
+          i = 1;
+        }
+      }
+    }
+  } else {
+    while (true) {
+
+      getEngFin(i, finCase);
 
       counter = counter + 1;
 
@@ -215,10 +256,10 @@ bool listChecker(std::list<std::string> searchedList,
   return result;
 }
 
-void getEngFin(int k) {
+void getEngFin(int k, int finCase) {
   std::string wordEng = getEng(k);
 
-  std::string wordFin = getFin(k);
+  std::string wordFin = getFin(k, finCase);
 
   std::string wordFinInput;
   std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
@@ -229,7 +270,7 @@ void getEngFin(int k) {
     std::cout << "Yes! :)" << std::endl;
     Score.correct += 1;
   } else {
-    std::cout << "No :(" << std::endl;
+    std::cout << "No :( The correct word was " << wordFin << std::endl;
     Score.incorrect += 1;
   };
   std::cout << "Your score: (" << Score.correct << " / " << Score.incorrect
@@ -239,7 +280,7 @@ void getEngFin(int k) {
 void getFinEng(int k) {
   std::string wordEng = getEng(k);
 
-  std::string wordFin = getFin(k);
+  std::string wordFin = getFin(k, 2);
 
   std::string wordEngInput;
   std::cout << std::endl
@@ -281,7 +322,7 @@ std::string getEng(int line) {
 
 std::string getFin(int line, int finCase) {
 
-  std::string wordFin = getElement(line, 2);
+  std::string wordFin = getElement(line, finCase + 1);
 
   return wordFin;
 }
