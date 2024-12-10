@@ -6,18 +6,21 @@
 #include <string>
 #include <vector>
 
-void practiseEnglish();
-void practiseFinnish(int finCase);
 void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
+
+void practiseEnglish();
+void practiseFinnish(int finCase);
+
 void getEngFin(int k, int finCase);
 void getFinEng(int k);
+
 std::string getElement(int row, int column);
 std::string gradeMessage(double grade);
 std::string getEng(int line);
 std::string getFin(int line, int finCase);
 
-std::ifstream readEngFin("wordsEngFin.csv");
+std::ifstream readEngFin("nounsEngFin.csv");
 
 int maxLine = 50;
 
@@ -78,6 +81,7 @@ int main() {
                   << "  Genitiivi (type 2), " << std::endl
                   << "  Partitiivi (type 3), " << std::endl
                   << "  Akkusatiivi (type 4), " << std::endl;
+        std::cin >> finCase;
 
         if (1 <= finCase and finCase <= 4) {
           break;
@@ -118,9 +122,9 @@ int main() {
     }
 
     if (EngOrFin == "Finnish" or EngOrFin == "finnish") {
-      practiseEnglish();
-    } else {
       practiseFinnish(finCase);
+    } else {
+      practiseEnglish();
     }
     double grade = (Score.correct / wordsTrained) * 9 + 1;
     std::cout << gradeMessage(grade) << std::endl;
