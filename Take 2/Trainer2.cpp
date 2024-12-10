@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -10,15 +11,19 @@ void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
 void getEngFin(int k);
 void getFinEng(int k);
+std::string getElement(int row, int column);
 std::string gradeMessage(double grade);
 std::string getEng(int line);
 std::string getFin(int line);
 
-std::ifstream readEngFin("wordsEngFin.txt");
+std::ifstream readEngFin("wordsEngFin.csv");
 
-int wordsTrained;
 int maxLine = 50;
+
+//Questions
 std::string EngOrFin;
+int finCase;
+int wordsTrained;
 
 struct {
   bool infinite;
@@ -30,7 +35,12 @@ struct {
                                "Nei", "nei", "Nee", "nee"};
   std::list<std::string> yes = {"Yes", "yes", "Yeah", "yeah", "Yea",
                                 "yea", "Ye",  "ye",   "Ja",   "ja"};
-  std::list<std::string> language = {"Finnish", "finnish", "English", "english"};
+  std::list<std::string> language = {"Finnish", "finnish", "English",
+                                     "english"};
+  std::list<std::string> cases = {
+      "Nominatiivi", "Genitiivi", "Akkusatiivi", "Partitiivi",
+      "nominatiivi", "genitiivi", "akkusatiivi", "partitiivi",
+  };
 } List;
 
 struct {
@@ -58,10 +68,31 @@ int main() {
       }
     };
 
+    // What case?
+    if (EngOrFin == "Finnish" or EngOrFin == "finnish") {
+      while (true) {
+        std::cout << "What case would you like to practise? " << std::endl
+                  << "  Nominatiivi (type 1), " << std::endl
+                  << "  Genitiivi (type 2), " << std::endl
+                  << "  Akkusatiivi (type 3), " << std::endl
+                  << "  Partitiivi (type 4), " << std::endl;
+
+        if (1 <= finCase and finCase <= 4) {
+          break;
+        } else {
+          std::cout
+              << std::endl
+              << "Sorry, I could not understand that. Please re-enter your "
+                 "answer."
+              << std::endl;
+        }
+      }
+    }
+
     // How many words?
-    std::cout
-        << "How many words do you want to practise (the current list contains "
-        << maxLine << " words)? ";
+    std::cout << "How many words do you want to practise (the current list "
+                 "contains "
+              << maxLine << " words)? ";
     std::cin >> wordsTrained;
 
     // Random order?
@@ -107,7 +138,7 @@ void practiseWords(std::string way) {
 
   int counter = 0;
 
-  int i = 1;
+  int i = 2;
 
   if (Practise.random) {
     while (true) {
@@ -243,25 +274,31 @@ std::string gradeMessage(double grade) {
 
 std::string getEng(int line) {
 
-  pointerMover(readEngFin, line);
-
-  std::string wordEng;
-  getline(readEngFin, wordEng, '|');
+  std::string wordEng = getElement(line, 1);
 
   return wordEng;
 }
 
-std::string getFin(int line) {
+std::string getFin(int line, int finCase) {
 
-  pointerMover(readEngFin, line);
-
-  std::string buffer;
-  getline(readEngFin, buffer, '|');
-
-  readEngFin.seekg(1, std::ifstream::cur);
-
-  std::string wordFin;
-  getline(readEngFin, wordFin, '|');
+  std::string wordFin = getElement(line, 2);
 
   return wordFin;
+}
+
+std::string getElement(int row, int column) {
+  pointerMover(readEngFin, row);
+
+  std::string output;
+  std::getline(readEngFin, output);
+
+  std::string tmp; // A string to store the word on each iteration.
+  std::stringstream str_strm(output);
+  std::vector<std::string> wordsVector; // Create vector to hold our words
+  while (str_strm >> tmp) {
+    tmp.pop_back();
+    wordsVector.push_back(tmp);
+  }
+
+  return wordsVector.at(column - 1);
 }
