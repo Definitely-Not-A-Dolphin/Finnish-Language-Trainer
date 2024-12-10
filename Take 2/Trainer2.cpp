@@ -6,11 +6,13 @@
 #include <string>
 #include <vector>
 
-void practiseWords(std::string way);
 void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
+
+void practiseWords(std::string way);
 void getEngFin(int k);
 void getFinEng(int k);
+
 std::string getElement(int row, int column);
 std::string gradeMessage(double grade);
 std::string getEng(int line);
