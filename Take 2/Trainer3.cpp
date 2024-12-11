@@ -50,8 +50,8 @@ struct {
 
 struct {
   std::vector<std::string> wordType = {
-      "adjectivesEngFin.csv", "nounsEngFin.csv", "numbersEngFin.csv",
-      "pronounsEngFin.csv",   "verbsEngFin.csv", "otherEngFin.csv",
+      "adjectivesFile.csv", "nounsFile.csv", "numbersFile.csv",
+      "pronounsFile.csv",   "verbsFile.csv", "otherFile.csv",
   };
 } Vector;
 
@@ -371,7 +371,7 @@ std::string getElement(int row, int column) {
   pointerMover(readFile, row);
 
   std::string output;
-  std::getline(readFile, output);
+  getline(readFile, output);
 
   std::string tmp; // A string to store the word on each iteration.
   std::stringstream str_strm(output);
