@@ -338,7 +338,7 @@ void getFinEng(int line) {
   std::cout << "Your current score: (" << Score.correct << " / "
             << Score.incorrect << ")" << std::endl;
 }
-
+ 
 std::string gradeMessage(double grade) {
   std::cout << std::endl << "Your grade is: " << grade << "/10" << std::endl;
 
