@@ -29,6 +29,7 @@ std::string getElement(std::ifstream &file, int row, int column);
 // Practices
 void standardPractise(std::ifstream &file, bool random, std::string language,
                       int finCase);
+void verbsPractise();
 
 // Questions
 void wordTypeQuestion();
@@ -45,6 +46,11 @@ struct {
   int wordAmount;
   bool random;
 } Answer;
+
+struct {
+  int correct;
+  int incorrect;
+} Score;
 
 struct {
   std::vector<std::string> no = {"No",  "no",  "Nah", "nah",
@@ -77,10 +83,10 @@ int main() {
 
   std::ifstream readFile(Answer.wordTypeString, std::ios::in);
 
-  if ((Answer.language == "Finnish" or Answer.language == "finnish") and
-      Answer.wordTypeInt != 5) {
+  if (Answer.wordTypeInt != 5) {
     standardPractise(readFile, Answer.random, Answer.language, Answer.finCase);
-  } else {
+  } else if (Answer.wordTypeInt == 5) {
+    verbsPractise();
   };
 
   readFile.close();
@@ -202,8 +208,7 @@ void caseQuestion() {
   }
 }
 void wordAmountQuestion() {
-  std::cout << std::endl
-            << "How many words do you want to practise? ";
+  std::cout << std::endl << "How many words do you want to practise? ";
   std::cin >> Answer.wordAmount;
 }
 void randomQuestion() {
