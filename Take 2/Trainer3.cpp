@@ -9,9 +9,10 @@
 // I'll use these as headers if I could figure out how they work
 void pointerMover(std::ifstream &file, int k);
 bool listChecker(std::list<std::string> searchedList, std::string searchedWord);
+int fileLenght(std::ifstream &file);
 
 // Practise Functions
-void practiseStandard(std::string fileName, int finCase);
+void practiseStandard(bool random, std::string language, int finCase);
 void practiseVerbs();
 
 // Get Functions
@@ -24,20 +25,14 @@ std::string getFin(int line, int finCase);
 // Other
 std::string gradeMessage(double grade);
 
-std::string fileName;
-std::ifstream readEngFin(fileName);
-
-int maxLine = 50;
-
-// Questions
-int wordType;
-std::string language;
-// Case
-double wordAmount;
-std::string answerRandom;
+int maxLine = 3;
 
 struct {
-  bool infinite;
+  // Questions
+  int wordType;
+  std::string language;
+  int finCase;
+  double wordAmount;
   bool random;
 } Practise;
 
@@ -65,12 +60,14 @@ struct {
   int incorrect;
 } Score;
 
+// File-related
+std::string fileName = Vector.wordType.at(Practise.wordType - 1);
+std::ifstream open(fileName, std::ios::in);
+std::ifstream readFile(fileName);
+
 int main() {
 
-  int finCase;
-
   while (true) {
-
     // Word Type
     while (true) {
       std::cout << "What type of word would you like to practise? " << std::endl
@@ -80,9 +77,9 @@ int main() {
                 << "  Pronouns (type 4), " << std::endl
                 << "  Verbs (type 5), " << std::endl
                 << "  Other (type 6), " << std::endl;
-      std::cin >> wordType;
+      std::cin >> Practise.wordType;
 
-      if (1 <= wordType <= 6) {
+      if (1 <= Practise.wordType <= 6) {
         break;
       } else {
         std::cout << std::endl
@@ -95,9 +92,9 @@ int main() {
     // English or Finnish
     while (true) {
       std::cout << std::endl << "What language would you like to practise? ";
-      std::cin >> language;
+      std::cin >> Practise.language;
 
-      if (listChecker(List.language, language)) {
+      if (listChecker(List.language, Practise.language)) {
         break;
       } else {
         std::cout << std::endl
@@ -108,7 +105,8 @@ int main() {
     };
 
     // What case?
-    if ((language == "Finnish" or language == "finnish") and wordType != 5) {
+    if ((Practise.language == "Finnish" or Practise.language == "finnish") and
+        Practise.wordType != 5) {
       while (true) {
         std::cout << std::endl
                   << "What case would you like to practise? " << std::endl
@@ -116,9 +114,9 @@ int main() {
                   << "  Genitiivi (type 2), " << std::endl
                   << "  Partitiivi (type 3), " << std::endl
                   << "  Akkusatiivi (type 4), " << std::endl;
-        std::cin >> finCase;
+        std::cin >> Practise.finCase;
 
-        if (1 <= finCase <= 4) {
+        if (1 <= Practise.finCase <= 4) {
           break;
         } else {
           std::cout
@@ -135,10 +133,11 @@ int main() {
               << "How many words do you want to practise (the current list "
                  "contains "
               << maxLine << " words)? ";
-    std::cin >> wordAmount;
+    std::cin >> Practise.wordAmount;
 
     // Random order?
     while (true) {
+      std::string answerRandom;
       std::cout << std::endl << "Do you want to randomise the words? ";
       std::cin >> answerRandom;
 
@@ -156,15 +155,14 @@ int main() {
       }
     }
 
-    if (wordType != 5) {
-      fileName = Vector.wordType.at(wordType - 1);
-      practiseStandard(fileName, finCase);
-    } else if (wordType = 5) {
+    if (Practise.wordType != 5) {
+      practiseStandard(Practise.random, Practise.language, Practise.finCase);
+    } else if (Practise.wordType = 5) {
       practiseVerbs();
     }
 
-    std::cout << Score.correct << std::endl << wordAmount << std::endl;
-    double grade = (Score.correct / wordAmount) * 9 + 1;
+    std::cout << Score.correct << std::endl << Practise.wordAmount << std::endl;
+    double grade = (Score.correct / Practise.wordAmount) * 9 + 1;
     std::cout << grade << std::endl;
     std::cout << gradeMessage(grade) << std::endl;
 
@@ -174,7 +172,7 @@ int main() {
     std::cout << std::endl << "Do you want to try again? " << std::endl;
     std::cin >> repeat;
 
-    readEngFin.close();
+    readFile.close();
 
     if (listChecker(List.no, repeat)) {
       break;
@@ -184,12 +182,11 @@ int main() {
   return 0;
 }
 
-void practiseStandard(std::string fileName, int finCase) {
-  std::ifstream readEngFin(fileName);
+void practiseStandard(bool random, std::string language, int finCase) {
 
   int counter = 0;
 
-  if (Practise.random) {
+  if (random) {
     while (true) {
 
       // Get random sequence n
@@ -203,7 +200,7 @@ void practiseStandard(std::string fileName, int finCase) {
 
       counter += 1;
 
-      if (counter == wordAmount) {
+      if (counter == Practise.wordAmount) {
         break;
       }
     }
@@ -211,7 +208,6 @@ void practiseStandard(std::string fileName, int finCase) {
     int line = 2;
 
     while (true) {
-
       if (language == "English" or language == "english") {
         getFinEng(line);
       } else {
@@ -220,21 +216,21 @@ void practiseStandard(std::string fileName, int finCase) {
 
       counter += 1, line += 1;
 
-      if (counter == wordAmount) {
+      if (counter == Practise.wordAmount) {
         break;
       };
 
       if (line > maxLine) {
-        readEngFin.seekg(0, std::ifstream::beg);
-        pointerMover(readEngFin, 2);
+        readFile.seekg(0, std::ifstream::beg);
+        pointerMover(readFile, 2);
       }
     }
   }
-  readEngFin.close();
+  readFile.close();
 }
 
 void practiseVerbs() {
-  std::ifstream readEngFin("verbsEngFin.csv");
+  std::ifstream readFile("verbsEngFin.csv");
 
   std::vector<int> randomSequence1;
   std::vector<int> randomSequence2;
@@ -265,11 +261,11 @@ void practiseVerbs() {
 
     counter += 1;
 
-    if (counter == wordAmount) {
+    if (counter == Practise.wordAmount) {
       break;
     }
   }
-  readEngFin.close();
+  readFile.close();
 }
 
 void pointerMover(std::ifstream &file, int k) {
@@ -328,8 +324,7 @@ void getFinEng(int line) {
   std::string wordFin = getFin(line, 2);
 
   std::string wordEngInput;
-  std::cout << std::endl
-            << "What is the " << language << " word for " << language << "? ";
+  std::cout << std::endl << "What is the English word for " << wordFin << "? ";
   std::cin >> wordEngInput;
   std::cout << std::endl;
 
@@ -373,10 +368,10 @@ std::string getFin(int line, int finCase) {
 }
 
 std::string getElement(int row, int column) {
-  pointerMover(readEngFin, row);
+  pointerMover(readFile, row);
 
   std::string output;
-  std::getline(readEngFin, output);
+  std::getline(readFile, output);
 
   std::string tmp; // A string to store the word on each iteration.
   std::stringstream str_strm(output);
@@ -387,4 +382,15 @@ std::string getElement(int row, int column) {
   }
 
   return wordsVector.at(column - 1);
+}
+
+int fileLenght(std::ifstream &file) {
+  char ch;
+  int lineCount=0;
+  while (file.get(ch)) { // Read one character at a time
+    if (ch == '\n') {
+      lineCount++;
+    }
+  }
+  return lineCount;
 }
