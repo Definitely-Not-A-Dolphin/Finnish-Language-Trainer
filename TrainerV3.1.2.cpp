@@ -2,10 +2,19 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <random>
 
 // Header
-void pointerMover(std::ifstream &file, int k);
+void pointerMover(std::string fileName, int k);
+int randomInt(int lower, int upper) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(lower, upper);
 
+  int randomX = dis(gen);
+
+  return randomX;
+}
 bool vectorChecker(std::vector<std::string> searchedVector,
                    std::string searchedWord) {
   bool result = false;
@@ -20,14 +29,14 @@ bool vectorChecker(std::vector<std::string> searchedVector,
 }
 
 // Get functions
-void getEngPractise(std::ifstream &file, int line);
-void getFinPractise(std::ifstream &file, int line, int finCase);
-std::string getEng(std::ifstream &file, int line);
-std::string getFin(std::ifstream &file, int line, int finCase);
-std::string getElement(std::ifstream &file, int row, int column);
+void getEngPractise(std::string fileName, int line);
+void getFinPractise(std::string fileName, int line, int finCase);
+std::string getEng(std::string fileName, int line);
+std::string getFin(std::string fileName, int line, int finCase);
+std::string getElement(std::string fileName, int row, int column);
 
 // Practices
-void standardPractise(std::ifstream &file, bool random, std::string language,
+void standardPractise(std::string fileName, bool random, std::string language,
                       int finCase);
 void verbsPractise();
 
@@ -81,67 +90,14 @@ int main() {
   wordAmountQuestion();
   randomQuestion();
 
-  std::ifstream readFile(Answer.wordTypeString, std::ios::in);
-
   if (Answer.wordTypeInt != 5) {
-    standardPractise(readFile, Answer.random, Answer.language, Answer.finCase);
+    standardPractise(Answer.wordTypeString, Answer.random, Answer.language,
+                     Answer.finCase);
   } else if (Answer.wordTypeInt == 5) {
     verbsPractise();
   };
 
-  readFile.close();
-
   return 0;
-}
-
-void standardPractise(std::ifstream &file, bool random, std::string language,
-                      int finCase) {
-
-  int counter = 0;
-  int maxLine = 4;
-
-  if (random) {
-
-    while (true) {
-
-      // Get random sequence n
-      std::vector<int> randomSequence;
-
-      if (language == "English" or language == "english") {
-        getEngPractise(file, randomSequence.at(counter));
-      } else {
-        getFinPractise(file, randomSequence.at(counter), finCase);
-      }
-
-      counter += 1;
-
-      if (counter == Answer.wordAmount) {
-        break;
-      }
-    }
-  } else {
-    int line = 2;
-
-    while (true) {
-      if (language == "English" or language == "english") {
-        getEngPractise(file, line);
-      } else {
-        getFinPractise(file, line, finCase);
-      };
-
-      counter += 1, line += 1;
-
-      if (counter == Answer.wordAmount) {
-        break;
-      };
-
-      if (line > maxLine) {
-        file.seekg(0, std::ifstream::beg);
-        pointerMover(file, 2);
-      }
-    }
-  }
-  file.close();
 }
 
 // Questions
@@ -232,10 +188,71 @@ void randomQuestion() {
   };
 }
 
-void getFinPractise(std::ifstream &file, int line, int finCase) {
-  std::string wordEng = getEng(file, line);
+void standardPractise(std::string fileName, bool random, std::string language,
+                      int finCase) {
 
-  std::string wordFin = getFin(file, line, finCase);
+  std::ifstream file(fileName, std::ios::in);
+
+  int counter = 0;
+  int maxLine = 4;
+
+  if (random) {
+
+    while (true) {
+
+      // Get random sequence n
+      std::vector<int> randomSequence;
+
+      if (language == "English" or language == "english") {
+        getEngPractise(fileName, randomSequence.at(counter));
+      } else {
+        getFinPractise(fileName, randomSequence.at(counter), finCase);
+      }
+
+      counter += 1;
+
+      if (counter == Answer.wordAmount) {
+        break;
+      }
+    }
+  } else {
+    int line = 2;
+
+    while (true) {
+      if (language == "English" or language == "english") {
+        getEngPractise(fileName, line);
+      } else {
+        getFinPractise(fileName, line, finCase);
+      };
+
+      counter += 1, line += 1;
+
+      if (counter == Answer.wordAmount) {
+        break;
+      };
+
+      if (line > maxLine) {
+        file.seekg(0, std::ifstream::beg);
+        pointerMover(fileName, 2);
+      }
+    }
+  }
+
+  file.close();
+}
+
+void verbsPractise() {
+
+
+
+}
+
+void getFinPractise(std::string fileName, int line, int finCase) {
+  std::ifstream file(fileName, std::ios::in);
+
+  std::string wordEng = getEng(fileName, line);
+
+  std::string wordFin = getFin(fileName, line, finCase);
 
   std::string wordFinInput;
   std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
@@ -247,12 +264,16 @@ void getFinPractise(std::ifstream &file, int line, int finCase) {
   } else {
     std::cout << "No :( The correct word was " << wordFin << std::endl;
   };
+
+  file.close();
 }
 
-void getEngPractise(std::ifstream &file, int line) {
-  std::string wordEng = getEng(file, line);
+void getEngPractise(std::string fileName, int line) {
+  std::ifstream file(fileName, std::ios::in);
 
-  std::string wordFin = getFin(file, line, 1);
+  std::string wordEng = getEng(fileName, line);
+
+  std::string wordFin = getFin(fileName, line, 1);
 
   std::string wordEngInput;
   std::cout << std::endl << "What is the Finnish word for " << wordFin << "? ";
@@ -264,24 +285,37 @@ void getEngPractise(std::ifstream &file, int line) {
   } else {
     std::cout << "No :( The correct word was " << wordEng << std::endl;
   };
+
+  file.close();
 }
 
-std::string getEng(std::ifstream &file, int line) {
+std::string getEng(std::string fileName, int line) {
 
-  std::string wordFin = getElement(file, line, 1);
+  std::ifstream file(fileName, std::ios::in);
+
+  std::string wordFin = getElement(fileName, line, 1);
+
+  file.close();
 
   return wordFin;
 }
 
-std::string getFin(std::ifstream &file, int line, int finCase) {
+std::string getFin(std::string fileName, int line, int finCase) {
 
-  std::string wordFin = getElement(file, line, finCase + 1);
+  std::ifstream file(fileName, std::ios::in);
+
+  std::string wordFin = getElement(fileName, line, finCase + 1);
+
+  file.close();
 
   return wordFin;
 }
 
-std::string getElement(std::ifstream &file, int row, int column) {
-  pointerMover(file, row);
+std::string getElement(std::string fileName, int row, int column) {
+
+  std::ifstream file(fileName, std::ios::in);
+
+  pointerMover(fileName, row);
 
   std::string output;
   getline(file, output);
@@ -294,12 +328,14 @@ std::string getElement(std::ifstream &file, int row, int column) {
     wordsVector.push_back(tmp);
   }
 
+  file.close();
+
   return wordsVector.at(column - 1);
 }
 
-void pointerMover(std::ifstream &file, int k) {
-
+void pointerMover(std::string fileName, int k) {
   // Special thanks to Elses/Menium for writing this part!
+  std::ifstream file(fileName, std::ios::in);
 
   file.clear();
   file.seekg(0, std::ios::beg);
@@ -311,4 +347,5 @@ void pointerMover(std::ifstream &file, int k) {
       return;
     }
   }
+  file.close();
 }
