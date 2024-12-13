@@ -39,7 +39,7 @@ int fileSize(std::string fileName) {
   file.close();
 
   return lineCounter;
-};
+}
 
 // Get functions
 void getEngPractise(std::string fileName, int line);
@@ -91,17 +91,23 @@ struct {
 
 int main() {
 
-  std::cout << "Yep, this runs!" << std::endl;
+  std::ifstream readFile("verbsFile.csv", std::ios::in);
+
+  std::cout << fileSize("verbsFile.csv") << std::endl;
+
+  readFile.close();
 
   // Questions
   wordTypeQuestion();
-  languageQuestion();
-  if ((Answer.language == "Finnish" or Answer.language == "finnish") and
-      Answer.wordTypeInt != 5) {
-    caseQuestion();
-  }
+  if (Answer.wordTypeInt != 5) {
+    languageQuestion();
+    randomQuestion();
+    if (Answer.language == "Finnish" or Answer.language == "finnish") {
+      caseQuestion();
+    }
+  };
+
   wordAmountQuestion();
-  randomQuestion();
 
   if (Answer.wordTypeInt != 5) {
     standardPractise(Answer.wordTypeString, Answer.random, Answer.language,
@@ -260,18 +266,30 @@ void verbsPractise() {
   int counter = 0;
   int maxLine = fileSize("verbsFile.csv");
 
-  if (random) {
-    while (true) {
-      int randomNumber1 = randomInt(2, maxLine);
-      int randomNumber2= randomInt(2, maxLine);
+  while (true) {
+    int randomNumber1 = randomInt(2, maxLine);
+    int randomNumber2 = randomInt(2, 8);
 
-      getElement("verbsFile.csv", randomNumber1, randomNumber2);
+    std::string pronoun = getElement("VerbsFile.csv", 1, randomNumber2);
+    std::string verb = getElement("verbsFile.csv", randomNumber1, 1);
+    std::string wordFin =
+        getElement("verbsFile.csv", randomNumber1, randomNumber2);
+    std::string wordFinInput;
 
-      counter += 1;
+    std::cout << "Enter the correct conjugation with the verb " << verb << ": "
+              << pronoun << " ";
+    std::cin >> wordFinInput;
 
-      if (counter == Answer.wordAmount) {
-        break;
-      }
+    if (wordFinInput == wordFin) {
+      std::cout << "Yes! :)" << std::endl;
+    } else {
+      std::cout << "No :( The correct word was " << wordFin << std::endl;
+    };
+
+    counter += 1;
+
+    if (counter == Answer.wordAmount) {
+      break;
     }
   };
 
