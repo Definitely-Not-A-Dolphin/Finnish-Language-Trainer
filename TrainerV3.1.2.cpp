@@ -1,8 +1,8 @@
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <vector>
-#include <random>
 
 // Header
 void pointerMover(std::string fileName, int k);
@@ -27,6 +27,19 @@ bool vectorChecker(std::vector<std::string> searchedVector,
 
   return result;
 }
+int fileSize(std::string fileName) {
+  std::ifstream file(fileName, std::ios::in);
+
+  int lineCounter = 0;
+  std::string output;
+
+  while (getline(file, output)) {
+    lineCounter += 1;
+  }
+  file.close();
+
+  return lineCounter;
+};
 
 // Get functions
 void getEngPractise(std::string fileName, int line);
@@ -194,19 +207,19 @@ void standardPractise(std::string fileName, bool random, std::string language,
   std::ifstream file(fileName, std::ios::in);
 
   int counter = 0;
-  int maxLine = 4;
+  int maxLine = fileSize(fileName);
 
   if (random) {
 
     while (true) {
 
       // Get random sequence n
-      std::vector<int> randomSequence;
+      int randomNumber = randomInt(2, maxLine);
 
       if (language == "English" or language == "english") {
-        getEngPractise(fileName, randomSequence.at(counter));
+        getEngPractise(fileName, randomNumber);
       } else {
-        getFinPractise(fileName, randomSequence.at(counter), finCase);
+        getFinPractise(fileName, randomNumber, finCase);
       }
 
       counter += 1;
@@ -242,9 +255,27 @@ void standardPractise(std::string fileName, bool random, std::string language,
 }
 
 void verbsPractise() {
+  std::ifstream file("verbsFile.csv", std::ios::in);
 
+  int counter = 0;
+  int maxLine = fileSize("verbsFile.csv");
 
+  if (random) {
+    while (true) {
+      int randomNumber1 = randomInt(2, maxLine);
+      int randomNumber2= randomInt(2, maxLine);
 
+      getElement("verbsFile.csv", randomNumber1, randomNumber2);
+
+      counter += 1;
+
+      if (counter == Answer.wordAmount) {
+        break;
+      }
+    }
+  };
+
+  file.close();
 }
 
 void getFinPractise(std::string fileName, int line, int finCase) {
@@ -326,7 +357,7 @@ std::string getElement(std::string fileName, int row, int column) {
   while (str_strm >> tmp) {
     tmp.pop_back();
     wordsVector.push_back(tmp);
-  }
+  };
 
   file.close();
 
