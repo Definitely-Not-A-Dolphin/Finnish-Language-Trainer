@@ -1,7 +1,10 @@
+#include <cmath>
 #include <fstream>
 #include <iostream>
+#include <list>
 #include <random>
 #include <sstream>
+#include <string>
 #include <vector>
 
 // Header
@@ -27,19 +30,7 @@ bool vectorChecker(std::vector<std::string> searchedVector,
 
   return result;
 }
-int fileSize(std::string fileName) {
-  std::ifstream file(fileName, std::ios::in);
-
-  int lineCounter = 0;
-  std::string output;
-
-  while (getline(file, output)) {
-    lineCounter += 1;
-  }
-  file.close();
-
-  return lineCounter;
-}
+int fileSize(std::string fileName);
 
 // Get functions
 void getEngPractise(std::string fileName, int line);
@@ -91,9 +82,9 @@ struct {
 
 int main() {
 
-  std::ifstream readFile("verbsFile.csv", std::ios::in);
+  std::ifstream readFile("nounsFile.csv", std::ios::in);
 
-  std::cout << fileSize("verbsFile.csv") << std::endl;
+  std::cout << fileSize("nounsFile.csv") << std::endl;
 
   readFile.close();
 
@@ -395,6 +386,20 @@ void pointerMover(std::string fileName, int k) {
       std::cerr << "Error: Line " << k << " does not exist!" << std::endl;
       return;
     }
-  }
+  };
   file.close();
+}
+
+int fileSize(std::string fileName) {
+  std::ifstream file(fileName, std::ios::in);
+
+  int lineCounter = 0;
+  std::string output;
+
+  while (getline(file, output)) {
+    lineCounter += 1;
+  };
+  file.close();
+
+  return lineCounter;
 }
