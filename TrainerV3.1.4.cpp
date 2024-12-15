@@ -82,12 +82,6 @@ struct {
 
 int main() {
 
-  std::ifstream readFile("nounsFile.csv", std::ios::in);
-
-  std::cout << fileSize("nounsFile.csv") << std::endl;
-
-  readFile.close();
-
   // Questions
   wordTypeQuestion();
   if (Answer.wordTypeInt != 5) {
@@ -207,11 +201,12 @@ void standardPractise(std::string fileName, bool random, std::string language,
   int maxLine = fileSize(fileName);
 
   if (random) {
-
     while (true) {
 
       // Get random sequence n
       int randomNumber = randomInt(2, maxLine);
+
+      std::cout << randomNumber <<std::endl;
 
       if (language == "English" or language == "english") {
         getEngPractise(fileName, randomNumber);
@@ -396,9 +391,10 @@ int fileSize(std::string fileName) {
   int lineCounter = 0;
   std::string output;
 
-  while (getline(file, output)) {
+  while (getline(file, output, '\n')) {
     lineCounter += 1;
   };
+  
   file.close();
 
   return lineCounter;
