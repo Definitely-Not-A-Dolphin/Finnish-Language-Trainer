@@ -56,12 +56,12 @@ struct {
   int wordTypeInt;
   std::string language;
   int finCase;
-  int wordAmount;
+  double wordAmount;
   bool random;
 } Answer;
 
 struct {
-  int correct;
+  double correct;
   int incorrect;
 } Score;
 
@@ -78,6 +78,13 @@ struct {
   std::vector<std::string> wordType = {"adjectivesFile.csv", "nounsFile.csv",
                                        "numbersFile.csv",    "pronounsFile.csv",
                                        "verbsFile.csv",      "otherFile.csv"};
+  std::vector<std::string> gradeMessage = {
+      "This is too hard for you. Have you considered Swedish?",
+      "Were you even trying?",
+      "I would consider that not very good.",
+      "It's okay, could be better.",
+      "Solid grade!",
+      "Wow, good job!"};
 } Vector;
 
 int main() {
@@ -100,6 +107,12 @@ int main() {
   } else if (Answer.wordTypeInt == 5) {
     verbsPractise();
   };
+
+  double grade = (Score.correct / Answer.wordAmount) * 9 + 1;
+
+  std::cout << Vector.gradeMessage.at((int)floor(grade / 2)) << std::endl;
+
+  Score.correct, Score.incorrect = 0;
 
   return 0;
 }
@@ -208,7 +221,6 @@ void standardPractise(std::string fileName, bool random, std::string language,
       if (language == "English" or language == "english") {
         getEngPractise(fileName, randomNumber);
       } else {
-        std::cout << getFin(fileName, randomNumber, 1);
         getFinPractise(fileName, randomNumber, finCase);
       }
 
@@ -289,10 +301,15 @@ void getFinPractise(std::string fileName, int line, int finCase) {
   std::cout << std::endl;
 
   if (wordFinInput == wordFin) {
-    std::cout << "Yes! :)" << std::endl;
+    Score.correct += 1;
+    std::cout << "Yes! :)";
   } else {
+    Score.incorrect += 1;
     std::cout << "No :( The correct word was " << wordFin << std::endl;
   };
+
+  std::cout << "(" << Score.correct << " / " << Score.incorrect << ")"
+            << std::endl;
 
   file.close();
 }
@@ -387,7 +404,7 @@ int fileSize(std::string fileName) {
   while (getline(file, output, '\n')) {
     lineCounter += 1;
   };
-  
+
   file.close();
 
   return lineCounter;
