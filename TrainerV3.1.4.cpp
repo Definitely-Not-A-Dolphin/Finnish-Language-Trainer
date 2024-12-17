@@ -8,7 +8,7 @@
 #include <vector>
 
 // Header
-void pointerMover(std::string fileName, int k);
+void pointerMover(std::ifstream &file, int k);
 int randomInt(int lower, int upper) {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -201,24 +201,18 @@ void standardPractise(std::string fileName, bool random, std::string language,
   int maxLine = fileSize(fileName);
 
   if (random) {
-    while (true) {
+    while (counter != Answer.wordAmount) {
 
-      // Get random sequence n
       int randomNumber = randomInt(2, maxLine);
-
-      std::cout << randomNumber <<std::endl;
 
       if (language == "English" or language == "english") {
         getEngPractise(fileName, randomNumber);
       } else {
+        std::cout << getFin(fileName, randomNumber, 1);
         getFinPractise(fileName, randomNumber, finCase);
       }
 
       counter += 1;
-
-      if (counter == Answer.wordAmount) {
-        break;
-      }
     }
   } else {
     int line = 2;
@@ -238,10 +232,10 @@ void standardPractise(std::string fileName, bool random, std::string language,
 
       if (line > maxLine) {
         file.seekg(0, std::ifstream::beg);
-        pointerMover(fileName, 2);
+        pointerMover(file, 2);
       }
     }
-  }
+  };
 
   file.close();
 }
@@ -350,7 +344,7 @@ std::string getElement(std::string fileName, int row, int column) {
 
   std::ifstream file(fileName, std::ios::in);
 
-  pointerMover(fileName, row);
+  pointerMover(file, row);
 
   std::string output;
   getline(file, output);
@@ -368,9 +362,9 @@ std::string getElement(std::string fileName, int row, int column) {
   return wordsVector.at(column - 1);
 }
 
-void pointerMover(std::string fileName, int k) {
+void pointerMover(std::ifstream &file, int k) {
+
   // Special thanks to Elses/Menium for writing this part!
-  std::ifstream file(fileName, std::ios::in);
 
   file.clear();
   file.seekg(0, std::ios::beg);
@@ -381,8 +375,7 @@ void pointerMover(std::string fileName, int k) {
       std::cerr << "Error: Line " << k << " does not exist!" << std::endl;
       return;
     }
-  };
-  file.close();
+  }
 }
 
 int fileSize(std::string fileName) {
