@@ -30,6 +30,17 @@ bool vectorChecker(std::vector<std::string> searchedVector,
 
   return result;
 }
+bool vectorCheckerInt(std::vector<int> searchedVector, int searchedInt) {
+  bool result = false;
+
+  for (int comparer : searchedVector) {
+    if (comparer = searchedInt) {
+      result = true;
+    }
+  };
+
+  return result;
+}
 int fileSize(std::string fileName);
 
 // Get functions
@@ -89,30 +100,52 @@ struct {
 
 int main() {
 
-  // Questions
-  wordTypeQuestion();
-  if (Answer.wordTypeInt != 5) {
-    languageQuestion();
-    randomQuestion();
-    if (Answer.language == "Finnish" or Answer.language == "finnish") {
-      caseQuestion();
-    }
+  std::cout << "-+======================================+-" << std::endl;
+
+  while (true) {
+    // Questions
+    wordTypeQuestion();
+    if (Answer.wordTypeInt != 5) {
+      languageQuestion();
+      randomQuestion();
+      if (Answer.language == "Finnish" or Answer.language == "finnish") {
+        caseQuestion();
+      }
+    };
+    wordAmountQuestion();
+
+    if (Answer.wordAmount == 0) {
+    };
+
+    if (Answer.wordTypeInt != 5) {
+      standardPractise(Answer.wordTypeString, Answer.random, Answer.language,
+                       Answer.finCase);
+    } else if (Answer.wordTypeInt == 5) {
+      verbsPractise();
+    };
+
+    double grade = (Score.correct / Answer.wordAmount) * 9 + 1;
+
+    std::cout << Vector.gradeMessage.at((int)floor(grade / 2)) << std::endl;
+
+    Score.correct, Score.incorrect = 0;
+
+    bool keepGoingBool;
+    std::string keepGoing;
+    std::cout << "Do you want to keep going with pracising? ";
+    std::cin >> keepGoing;
+
+    while (true) {
+      if (vectorChecker(Vector.yes, keepGoing)) {
+        keepGoingBool = true;
+        break;
+      };
+    };
+
+    if (!keepGoingBool) {
+      break;
+    };
   };
-
-  wordAmountQuestion();
-
-  if (Answer.wordTypeInt != 5) {
-    standardPractise(Answer.wordTypeString, Answer.random, Answer.language,
-                     Answer.finCase);
-  } else if (Answer.wordTypeInt == 5) {
-    verbsPractise();
-  };
-
-  double grade = (Score.correct / Answer.wordAmount) * 9 + 1;
-
-  std::cout << Vector.gradeMessage.at((int)floor(grade / 2)) << std::endl;
-
-  Score.correct, Score.incorrect = 0;
 
   return 0;
 }
@@ -207,24 +240,30 @@ void randomQuestion() {
 
 void standardPractise(std::string fileName, bool random, std::string language,
                       int finCase) {
-
   std::ifstream file(fileName, std::ios::in);
 
   int counter = 0;
   int maxLine = fileSize(fileName);
 
   if (random) {
-    while (counter != Answer.wordAmount) {
+    std::cout << "yeh" << std::endl;
+    while (true) {
 
       int randomNumber = randomInt(2, maxLine);
+
+      std::cout << "-+======================================+-" << std::endl;
 
       if (language == "English" or language == "english") {
         getEngPractise(fileName, randomNumber);
       } else {
         getFinPractise(fileName, randomNumber, finCase);
-      }
+      };
 
       counter += 1;
+
+      if (counter == Answer.wordAmount) {
+        break;
+      }
     }
   } else {
     int line = 2;
@@ -254,6 +293,10 @@ void standardPractise(std::string fileName, bool random, std::string language,
 
 void verbsPractise() {
   std::ifstream file("verbsFile.csv", std::ios::in);
+
+  if (Answer.wordAmount = 0) {
+    Answer.wordAmount = fileSize("verbsFile.csv") - 1;
+  };
 
   int counter = 0;
   int maxLine = fileSize("verbsFile.csv");
@@ -302,13 +345,13 @@ void getFinPractise(std::string fileName, int line, int finCase) {
 
   if (wordFinInput == wordFin) {
     Score.correct += 1;
-    std::cout << "Yes! :)";
+    std::cout << "Yes! :) ";
   } else {
     Score.incorrect += 1;
     std::cout << "No :( The correct word was " << wordFin << std::endl;
   };
 
-  std::cout << "(" << Score.correct << " / " << Score.incorrect << ")"
+  std::cout << " (" << Score.correct << " / " << Score.incorrect << ")"
             << std::endl;
 
   file.close();
