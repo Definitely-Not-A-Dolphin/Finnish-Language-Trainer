@@ -33,7 +33,7 @@ bool vectorChecker(std::vector<std::string> searchedVector,
 bool vectorCheckerInt(std::vector<int> searchedVector, int searchedInt) {
   bool result = false;
 
-  for (int comparer : searchedVector) {
+  for (int comparer; comparer < searchedVector.size(); comparer++) {
     if (comparer = searchedInt) {
       result = true;
     }
@@ -99,10 +99,10 @@ struct {
 } Vector;
 
 int main() {
-
-  std::cout << "-+======================================+-" << std::endl;
-
   while (true) {
+
+    std::cout << std::endl << "-+======================================+-" << std::endl;
+
     // Questions
     wordTypeQuestion();
     if (Answer.wordTypeInt != 5) {
@@ -126,19 +126,26 @@ int main() {
 
     double grade = (Score.correct / Answer.wordAmount) * 9 + 1;
 
-    std::cout << Vector.gradeMessage.at((int)floor(grade / 2)) << std::endl;
+    std::cout << "Your grade is " << grade << "/10; "
+              << Vector.gradeMessage.at((int)floor(grade / 2)) << std::endl;
 
     Score.correct, Score.incorrect = 0;
 
     bool keepGoingBool;
-    std::string keepGoing;
-    std::cout << "Do you want to keep going with pracising? ";
-    std::cin >> keepGoing;
 
     while (true) {
-      if (vectorChecker(Vector.yes, keepGoing)) {
+      std::string keepGoing;
+      std::cout << "Do you want to keep going with pracising? ";
+      std::cin >> keepGoing;
+
+      if (vectorChecker(Vector.no, keepGoing)) {
+        keepGoingBool = false;
+        break;
+      } else if (vectorChecker(Vector.yes, keepGoing)) {
         keepGoingBool = true;
         break;
+      } else {
+        std::cout << "Sorry, I could not understand that, please try again: " << std::endl;
       };
     };
 
@@ -242,16 +249,20 @@ void standardPractise(std::string fileName, bool random, std::string language,
                       int finCase) {
   std::ifstream file(fileName, std::ios::in);
 
+  if (Answer.wordAmount == 0) {
+    Answer.wordAmount = fileSize(fileName) - 1;
+  };
+
   int counter = 0;
   int maxLine = fileSize(fileName);
 
   if (random) {
-    std::cout << "yeh" << std::endl;
     while (true) {
 
       int randomNumber = randomInt(2, maxLine);
 
-      std::cout << "-+======================================+-" << std::endl;
+      std::cout << std::endl
+                << "-+======================================+-" << std::endl;
 
       if (language == "English" or language == "english") {
         getEngPractise(fileName, randomNumber);
@@ -259,7 +270,7 @@ void standardPractise(std::string fileName, bool random, std::string language,
         getFinPractise(fileName, randomNumber, finCase);
       };
 
-      counter += 1;
+      counter++;
 
       if (counter == Answer.wordAmount) {
         break;
@@ -269,13 +280,17 @@ void standardPractise(std::string fileName, bool random, std::string language,
     int line = 2;
 
     while (true) {
+
+      std::cout << "-+======================================+-" << std::endl;
+
       if (language == "English" or language == "english") {
         getEngPractise(fileName, line);
       } else {
         getFinPractise(fileName, line, finCase);
       };
 
-      counter += 1, line += 1;
+      counter += 1;
+      line += 1;
 
       if (counter == Answer.wordAmount) {
         break;
@@ -344,10 +359,10 @@ void getFinPractise(std::string fileName, int line, int finCase) {
   std::cout << std::endl;
 
   if (wordFinInput == wordFin) {
-    Score.correct += 1;
+    Score.correct++;
     std::cout << "Yes! :) ";
   } else {
-    Score.incorrect += 1;
+    Score.incorrect++;
     std::cout << "No :( The correct word was " << wordFin << std::endl;
   };
 
@@ -371,9 +386,14 @@ void getEngPractise(std::string fileName, int line) {
 
   if (wordEngInput == wordEng) {
     std::cout << "Yes! :)" << std::endl;
+    Score.correct++;
   } else {
+    Score.incorrect++;
     std::cout << "No :( The correct word was " << wordEng << std::endl;
   };
+
+  std::cout << " (" << Score.correct << " / " << Score.incorrect << ")"
+            << std::endl;
 
   file.close();
 }
