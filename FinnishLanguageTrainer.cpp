@@ -99,6 +99,7 @@ struct {
 } Vector;
 
 int main() {
+
   while (true) {
 
     std::cout << std::endl << "-+======================================+-" << std::endl;
@@ -427,14 +428,14 @@ std::string getElement(std::string fileName, int row, int column) {
   pointerMover(file, row);
 
   std::string output;
-  getline(file, output);
+  getline(file, output, ','); 
 
   std::string tmp; // A string to store the word on each iteration.
   std::stringstream str_strm(output);
   std::vector<std::string> wordsVector; // Create vector to hold our words
   while (str_strm >> tmp) {
     tmp.pop_back();
-    wordsVector.push_back(tmp);
+    wordsVector.push_back(tmp); 
   };
 
   file.close();
