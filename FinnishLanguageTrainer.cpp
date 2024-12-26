@@ -49,6 +49,7 @@ void getFinPractise(std::string fileName, int line, int finCase);
 std::string getEng(std::string fileName, int line);
 std::string getFin(std::string fileName, int line, int finCase);
 std::string getElement(std::string fileName, int row, int column);
+std::string getElementChar(std::string fileName, int row, int column);
 
 // Practices
 void standardPractise(std::string fileName, bool random, std::string language,
@@ -102,7 +103,8 @@ int main() {
 
   while (true) {
 
-    std::cout << std::endl << "-+======================================+-" << std::endl;
+    std::cout << std::endl
+              << "-+======================================+-" << std::endl;
 
     // Questions
     wordTypeQuestion();
@@ -146,7 +148,8 @@ int main() {
         keepGoingBool = true;
         break;
       } else {
-        std::cout << "Sorry, I could not understand that, please try again: " << std::endl;
+        std::cout << "Sorry, I could not understand that, please try again: "
+                  << std::endl;
       };
     };
 
@@ -321,10 +324,10 @@ void verbsPractise() {
     int randomNumber1 = randomInt(2, maxLine);
     int randomNumber2 = randomInt(2, 8);
 
-    std::string pronoun = getElement("VerbsFile.csv", 1, randomNumber2);
-    std::string verb = getElement("verbsFile.csv", randomNumber1, 1);
+    std::string pronoun = getElementChar("VerbsFile.csv", 1, randomNumber2);
+    std::string verb = getElementChar("verbsFile.csv", randomNumber1, 1);
     std::string wordFin =
-        getElement("verbsFile.csv", randomNumber1, randomNumber2);
+        getElementChar("verbsFile.csv", randomNumber1, randomNumber2);
     std::string wordFinInput;
 
     std::cout << "Enter the correct conjugation with the verb " << verb << ": "
@@ -403,7 +406,7 @@ std::string getEng(std::string fileName, int line) {
 
   std::ifstream file(fileName, std::ios::in);
 
-  std::string wordFin = getElement(fileName, line, 1);
+  std::string wordFin = getElementChar(fileName, line, 1);
 
   file.close();
 
@@ -414,7 +417,7 @@ std::string getFin(std::string fileName, int line, int finCase) {
 
   std::ifstream file(fileName, std::ios::in);
 
-  std::string wordFin = getElement(fileName, line, finCase + 1);
+  std::string wordFin = getElementChar(fileName, line, finCase + 1);
 
   file.close();
 
@@ -428,19 +431,72 @@ std::string getElement(std::string fileName, int row, int column) {
   pointerMover(file, row);
 
   std::string output;
-  getline(file, output, ','); 
+  getline(file, output, ',');
 
   std::string tmp; // A string to store the word on each iteration.
   std::stringstream str_strm(output);
   std::vector<std::string> wordsVector; // Create vector to hold our words
   while (str_strm >> tmp) {
     tmp.pop_back();
-    wordsVector.push_back(tmp); 
+    wordsVector.push_back(tmp);
   };
 
   file.close();
 
   return wordsVector.at(column - 1);
+}
+
+// I know very well that this function is inefficient, but for now I cannot get
+// it to be better than this. I am still learning.
+std::string getElementChar(std::string fileName, int row, int column) {
+
+  std::ifstream readFile(fileName, std::ios::in);
+
+  pointerMover(readFile, row);
+
+  struct {
+    char thing1[36];
+    char thing2[36];
+    char thing3[36];
+    char thing4[36];
+    char thing5[36];
+    char thing6[36];
+  } val;
+
+  struct {
+    std::string thing1;
+    std::string thing2;
+    std::string thing3;
+    std::string thing4;
+    std::string thing5;
+    std::string thing6;
+  } tpt;
+
+  std::vector<char *> charVector = {val.thing1, val.thing2, val.thing3,
+                                    val.thing4, val.thing5, val.thing6};
+
+  std::vector<std::string> strVector = {tpt.thing1, tpt.thing2, tpt.thing3,
+                                        tpt.thing4, tpt.thing5, tpt.thing6};
+
+  int g;
+
+  for (int gloop = 1; gloop <= column; gloop++) {
+
+    readFile.get(charVector.at(gloop), 36, ',');
+    readFile.seekg(1, std::ifstream::cur);
+
+    strVector.at(gloop) = charVector.at(gloop);
+
+    if (gloop == column) {
+      readFile.close();
+      g = gloop;
+    };
+  };
+
+  if (strVector.at(g)[0] == ' ') {
+    strVector.at(g).erase(strVector.at(g).begin());
+  };
+  return strVector.at(g);
 }
 
 void pointerMover(std::ifstream &file, int k) {
