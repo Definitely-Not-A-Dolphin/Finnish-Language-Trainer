@@ -48,6 +48,7 @@ void getEngPractise(std::string fileName, int line);
 void getFinPractise(std::string fileName, int line, int finCase);
 std::string getEng(std::string fileName, int line);
 std::string getFin(std::string fileName, int line, int finCase);
+//Not used anymore, but I decided to keep it in, I might need it later as a temporary substitute if its char-version stops functioning for whatever reason it may be.
 std::string getElement(std::string fileName, int row, int column);
 std::string getElementChar(std::string fileName, int row, int column);
 
@@ -278,7 +279,7 @@ void standardPractise(std::string fileName, bool random, std::string language,
 
       if (counter == Answer.wordAmount) {
         break;
-      }
+      };
     }
   } else {
     int line = 2;
