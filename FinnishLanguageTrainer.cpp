@@ -48,7 +48,9 @@ void getEngPractise(std::string fileName, int line);
 void getFinPractise(std::string fileName, int line, int finCase);
 std::string getEng(std::string fileName, int line);
 std::string getFin(std::string fileName, int line, int finCase);
-//Not used anymore, but I decided to keep it in, I might need it later as a temporary substitute if its char-version stops functioning for whatever reason it may be.
+// Not used anymore, but I decided to keep it in, I might need it later as a
+// temporary substitute if its char-version stops functioning for whatever
+// reason it may be.
 std::string getElement(std::string fileName, int row, int column);
 std::string getElementChar(std::string fileName, int row, int column);
 
@@ -170,8 +172,7 @@ void wordTypeQuestion() {
               << "  Nouns (type 2), " << std::endl
               << "  Numbers (type 3), " << std::endl
               << "  Pronouns (type 4), " << std::endl
-              << "  Verbs (type 5), " << std::endl
-              << "  Other (type 6), " << std::endl;
+              << "  Verbs (type 5), " << std::endl;
     std::cin >> Answer.wordTypeInt;
 
     if (1 <= Answer.wordTypeInt <= 6) {
@@ -314,34 +315,46 @@ void standardPractise(std::string fileName, bool random, std::string language,
 void verbsPractise() {
   std::ifstream file("verbsFile.csv", std::ios::in);
 
-  if (Answer.wordAmount = 0) {
-    Answer.wordAmount = fileSize("verbsFile.csv") - 1;
+  // std::cout << fileSize("verbsFile.csv") << std::endl;
+
+  if (Answer.wordAmount == 0) {
+    Answer.wordAmount = (fileSize("verbsFile.csv") - 1) * 6;
   };
+
+  std::cout << "run!3" << std::endl;
 
   int counter = 0;
   int maxLine = fileSize("verbsFile.csv");
 
   while (true) {
-    int randomNumber1 = randomInt(2, maxLine);
-    int randomNumber2 = randomInt(2, 8);
 
-    std::string pronoun = getElementChar("VerbsFile.csv", 1, randomNumber2);
-    std::string verb = getElementChar("verbsFile.csv", randomNumber1, 1);
-    std::string wordFin =
-        getElementChar("verbsFile.csv", randomNumber1, randomNumber2);
-    std::string wordFinInput;
+    int verbInt = randomInt(2, maxLine);
+    int pronounInt = randomInt(3, 8);
 
+    std::cout << std::endl
+              << "-+======================================+-" << std::endl;
+
+    std::string pronoun = getElementChar("verbsFile.csv", 1, pronounInt);
+    std::string verb = getElementChar("verbsFile.csv", verbInt, 1);
+    std::string verbConj = getElementChar("verbsFile.csv", verbInt, pronounInt);
+
+    std::string verbConjInput;
     std::cout << "Enter the correct conjugation with the verb " << verb << ": "
               << pronoun << " ";
-    std::cin >> wordFinInput;
+    std::cin >> verbConjInput;
 
-    if (wordFinInput == wordFin) {
+    if (verbConjInput == verbConj) {
+      Score.correct++;
       std::cout << "Yes! :)" << std::endl;
     } else {
-      std::cout << "No :( The correct word was " << wordFin << std::endl;
+      Score.incorrect++;
+      std::cout << "No :( The correct word was " << verbConj << std::endl;
     };
 
-    counter += 1;
+    std::cout << " (" << Score.correct << " / " << Score.incorrect << ")"
+              << std::endl;
+
+    counter++;
 
     if (counter == Answer.wordAmount) {
       break;
