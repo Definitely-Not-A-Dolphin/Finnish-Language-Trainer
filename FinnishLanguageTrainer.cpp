@@ -326,8 +326,6 @@ void verbsPractise() {
     Answer.wordAmount = (fileSize("verbsFile.csv") - 1) * 6;
   };
 
-  std::cout << "run!3" << std::endl;
-
   int counter = 0;
   int maxLine = fileSize("verbsFile.csv");
 
