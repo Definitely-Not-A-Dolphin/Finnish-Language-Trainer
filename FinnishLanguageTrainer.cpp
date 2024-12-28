@@ -141,7 +141,7 @@ int main() {
 
     while (true) {
       std::string keepGoing;
-      std::cout << "Do you want to keep going with pracising? ";
+      std::cout << std::endl << "Do you want to keep going with pracising? ";
       std::cin >> keepGoing;
 
       if (vectorChecker(Vector.no, keepGoing)) {
@@ -156,6 +156,9 @@ int main() {
       };
     };
 
+    Score.correct = 0;
+    Score.incorrect = 0;
+
     if (!keepGoingBool) {
       break;
     };
@@ -167,7 +170,8 @@ int main() {
 // Questions
 void wordTypeQuestion() {
   while (true) {
-    std::cout << "What type of word would you like to practise? " << std::endl
+    std::cout << std::endl
+              << "What type of word would you like to practise? " << std::endl
               << "  Adjectives (type 1), " << std::endl
               << "  Nouns (type 2), " << std::endl
               << "  Numbers (type 3), " << std::endl
@@ -194,7 +198,8 @@ void wordTypeQuestion() {
 void languageQuestion() {
   while (true) {
     std::cout << std::endl << "What language would you like to practise? ";
-    std::cin >> Answer.language;
+    // std::cin >> Answer.language;
+    std::getline(std::cin >> std::ws, Answer.language);
 
     if (vectorChecker(Vector.language, Answer.language)) {
       break;
@@ -234,7 +239,7 @@ void randomQuestion() {
   while (true) {
     std::string ans;
     std::cout << std::endl << "Would you like to randomise the word order? ";
-    std::cin >> ans;
+    std::getline(std::cin >> std::ws, ans);
 
     if (vectorChecker(Vector.yes, ans)) {
       Answer.random = true;
@@ -326,7 +331,7 @@ void verbsPractise() {
   int counter = 0;
   int maxLine = fileSize("verbsFile.csv");
 
-  while (true) {
+  while (counter != Answer.wordAmount) {
 
     int verbInt = randomInt(2, maxLine);
     int pronounInt = randomInt(3, 8);
@@ -334,9 +339,10 @@ void verbsPractise() {
     std::cout << std::endl
               << "-+======================================+-" << std::endl;
 
-    std::string pronoun = getElementChar("verbsFile.csv", 1, pronounInt);
-    std::string verb = getElementChar("verbsFile.csv", verbInt, 1);
-    std::string verbConj = getElementChar("verbsFile.csv", verbInt, pronounInt);
+    // Tot hier gaat alles goed!
+    std::string pronoun = getElement("verbsFile.csv", 1, pronounInt);
+    std::string verb = getElement("verbsFile.csv", verbInt, 1);
+    std::string verbConj = getElement("verbsFile.csv", verbInt, pronounInt);
 
     std::string verbConjInput;
     std::cout << "Enter the correct conjugation with the verb " << verb << ": "
@@ -345,20 +351,16 @@ void verbsPractise() {
 
     if (verbConjInput == verbConj) {
       Score.correct++;
-      std::cout << "Yes! :)" << std::endl;
+      std::cout << "Yes! :)";
     } else {
       Score.incorrect++;
-      std::cout << "No :( The correct word was " << verbConj << std::endl;
+      std::cout << "No :( The correct word was " << verbConj;
     };
 
     std::cout << " (" << Score.correct << " / " << Score.incorrect << ")"
               << std::endl;
 
     counter++;
-
-    if (counter == Answer.wordAmount) {
-      break;
-    }
   };
 
   file.close();
@@ -420,7 +422,7 @@ std::string getEng(std::string fileName, int line) {
 
   std::ifstream file(fileName, std::ios::in);
 
-  std::string wordFin = getElementChar(fileName, line, 1);
+  std::string wordFin = getElement(fileName, line, 1);
 
   file.close();
 
@@ -431,7 +433,7 @@ std::string getFin(std::string fileName, int line, int finCase) {
 
   std::ifstream file(fileName, std::ios::in);
 
-  std::string wordFin = getElementChar(fileName, line, finCase + 1);
+  std::string wordFin = getElement(fileName, line, finCase + 1);
 
   file.close();
 
@@ -445,14 +447,18 @@ std::string getElement(std::string fileName, int row, int column) {
   pointerMover(file, row);
 
   std::string output;
-  getline(file, output, ',');
 
-  std::string tmp; // A string to store the word on each iteration.
-  std::stringstream str_strm(output);
-  std::vector<std::string> wordsVector; // Create vector to hold our words
-  while (str_strm >> tmp) {
-    tmp.pop_back();
-    wordsVector.push_back(tmp);
+  std::vector<std::string> wordsVector = {};
+
+  while (getline(file, output, ',')) {
+
+    if (output[0] == ' ') {
+      output.erase(output.begin());
+    };
+
+    wordsVector.push_back(output);
+
+    output.erase();
   };
 
   file.close();
@@ -460,8 +466,8 @@ std::string getElement(std::string fileName, int row, int column) {
   return wordsVector.at(column - 1);
 }
 
-// I know very well that this function is inefficient, but for now I cannot get
-// it to be better than this. I am still learning.
+// this function is not used because it is whacky (reference to my collegue
+// whose name is wh4cky) and finite, its here for the sake of being here
 std::string getElementChar(std::string fileName, int row, int column) {
 
   std::ifstream readFile(fileName, std::ios::in);
@@ -475,6 +481,9 @@ std::string getElementChar(std::string fileName, int row, int column) {
     char thing4[36];
     char thing5[36];
     char thing6[36];
+    char thing7[36];
+    char thing8[36];
+    char thing9[36];
   } val;
 
   struct {
@@ -484,13 +493,18 @@ std::string getElementChar(std::string fileName, int row, int column) {
     std::string thing4;
     std::string thing5;
     std::string thing6;
+    std::string thing7;
+    std::string thing8;
+    std::string thing9;
   } tpt;
 
   std::vector<char *> charVector = {val.thing1, val.thing2, val.thing3,
-                                    val.thing4, val.thing5, val.thing6};
+                                    val.thing4, val.thing5, val.thing6,
+                                    val.thing7, val.thing8, val.thing9};
 
   std::vector<std::string> strVector = {tpt.thing1, tpt.thing2, tpt.thing3,
-                                        tpt.thing4, tpt.thing5, tpt.thing6};
+                                        tpt.thing4, tpt.thing5, tpt.thing6,
+                                        tpt.thing7, tpt.thing8, tpt.thing9};
 
   int g;
 
