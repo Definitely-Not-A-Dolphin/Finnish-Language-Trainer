@@ -64,6 +64,22 @@ void caseQuestion();
 void wordAmountQuestion();
 void randomQuestion();
 
+// ReadStuff
+void readAboutProgram() {
+  std::ifstream readFile("aboutProgram.txt", std::ios::in);
+
+  std::string filler;
+
+  while (getline(readFile, filler)) {
+    std::cout << filler << std::endl;
+  };
+
+  readFile.close();
+};
+void readAboutGrammar() {
+
+};
+
 struct {
   std::string wordTypeString;
   int wordTypeInt;
@@ -101,64 +117,96 @@ struct {
 } Vector;
 
 int main() {
+  int startDec1;
 
   while (true) {
-
-    std::cout << std::endl
-              << "-+======================================+-" << std::endl;
-
-    // Questions
-    wordTypeQuestion();
-    if (Answer.wordTypeInt != 5) {
-      languageQuestion();
-      randomQuestion();
-      if (Answer.language == "Finnish" or Answer.language == "finnish") {
-        caseQuestion();
-      }
-    };
-    wordAmountQuestion();
-
-    if (Answer.wordTypeInt != 5) {
-      standardPractise(Answer.wordTypeString, Answer.random, Answer.language,
-                       Answer.finCase);
-    } else if (Answer.wordTypeInt == 5) {
-      verbsPractise();
-    };
-
-    double grade = (Score.correct / Answer.wordAmount) * 9 + 1;
-
-    std::cout << "Your grade is " << grade << "/10; "
-              << Vector.gradeMessage.at((int)floor(grade / 2)) << std::endl;
-
-    Score.correct, Score.incorrect = 0;
-
-    bool keepGoingBool;
-
     while (true) {
-      std::string keepGoing;
-      std::cout << std::endl << "Do you want to keep going with pracising? ";
-      std::cin >> keepGoing;
+      std::cout << std::endl
+                << "Tervetuloa, this is a program written in C++ for those who "
+                   "want to test their Finnish vocabulary and more!"
+                << std::endl
+                << "Select what "
+                   "you would like to do:"
+                << std::endl
+                << "  Practise (type 1), " << std::endl
+                << "  Read about grammar (type 2), " << std::endl
+                << "  Read about this very program (type 3)" << std::endl
+                << "  Quit (type 0)" << std::endl;
+      std::cin >> startDec1;
 
-      if (vectorChecker(Vector.no, keepGoing)) {
-        keepGoingBool = false;
-        break;
-      } else if (vectorChecker(Vector.yes, keepGoing)) {
-        keepGoingBool = true;
+      if (0 <= startDec1 and startDec1 <= 3) {
         break;
       } else {
-        std::cout << "Sorry, I could not understand that, please try again: "
-                  << std::endl;
+        std::cout << "That's not a valid input, please try again." << std::endl;
       };
     };
 
-    Score.correct = 0;
-    Score.incorrect = 0;
-
-    if (!keepGoingBool) {
+    if (startDec1 == 3) {
+      readAboutProgram();
+    } else if (startDec1 == 2) {
+      readAboutGrammar();
+    } else if (startDec1 == 0) {
       break;
+    } else if (startDec1 == 1) {
+      while (true) {
+        std::cout << std::endl
+                  << "-+======================================+-" << std::endl;
+
+        // Questions
+        wordTypeQuestion();
+        if (Answer.wordTypeInt != 5) {
+          languageQuestion();
+          randomQuestion();
+          if (Answer.language == "Finnish" or Answer.language == "finnish") {
+            caseQuestion();
+          }
+        };
+        wordAmountQuestion();
+
+        if (Answer.wordTypeInt != 5) {
+          standardPractise(Answer.wordTypeString, Answer.random,
+                           Answer.language, Answer.finCase);
+        } else if (Answer.wordTypeInt == 5) {
+          verbsPractise();
+        };
+
+        double grade = (Score.correct / Answer.wordAmount) * 9 + 1;
+
+        std::cout << "Your grade is " << grade << "/10; "
+                  << Vector.gradeMessage.at((int)floor(grade / 2)) << std::endl;
+
+        Score.correct, Score.incorrect = 0;
+
+        bool keepGoingBool;
+
+        while (true) {
+          std::string keepGoing;
+          std::cout << std::endl
+                    << "Do you want to keep going with pracising? ";
+          std::cin >> keepGoing;
+
+          if (vectorChecker(Vector.no, keepGoing)) {
+            keepGoingBool = false;
+            break;
+          } else if (vectorChecker(Vector.yes, keepGoing)) {
+            keepGoingBool = true;
+            break;
+          } else {
+            std::cout
+                << "Sorry, I could not understand that, please try again: "
+                << std::endl;
+          };
+        };
+
+        Score.correct = 0;
+        Score.incorrect = 0;
+
+        if (!keepGoingBool) {
+          break;
+        };
+      };
     };
   };
-
   return 0;
 }
 
@@ -192,8 +240,9 @@ void wordTypeQuestion() {
 }
 void languageQuestion() {
   while (true) {
-    std::cout << std::endl << "What language would you like to practise? ";
-    // std::cin >> Answer.language;
+    std::cout << std::endl
+              << "In what language would you like to practise the words "
+                 "(Finnish / English)? ";
     std::getline(std::cin >> std::ws, Answer.language);
 
     if (vectorChecker(Vector.language, Answer.language)) {
@@ -213,22 +262,33 @@ void caseQuestion() {
               << "  Nominatiivi (type 1), " << std::endl
               << "  Genitiivi (type 2), " << std::endl
               << "  Partitiivi (type 3), " << std::endl
-              << "  Akkusatiivi (type 4), " << std::endl;
+              << "  Akkusatiivi (type 4), " << std::endl
+              << "  Inessiivi (type 5)" << std::endl;
     std::cin >> Answer.finCase;
 
-    if (1 <= Answer.finCase <= 4) {
+    if (1 <= Answer.finCase <= 5) {
       break;
     } else {
       std::cout << std::endl
-                << "Sorry, I could not understand that. Please re-enter your "
-                   "answer."
-                << std::endl;
+                << "That's not a valid input, please try again." << std::endl;
     }
   }
 }
 void wordAmountQuestion() {
-  std::cout << std::endl << "How many words do you want to practise? ";
-  std::cin >> Answer.wordAmount;
+  while (true) {
+    std::cout
+        << std::endl
+        << "How many words do you want to practise (type 0 if you want to "
+           "practise the amount of words in the selected catogory)? "
+        << std::endl;
+    std::cin >> Answer.wordAmount;
+
+    if (Answer.wordAmount >= 0) {
+      break;
+    } else {
+      std::cout << "That's not a valid input, please try again." << std::endl;
+    };
+  };
 }
 void randomQuestion() {
   while (true) {
@@ -331,7 +391,8 @@ void verbsPractise() {
       break;
     } else {
       std::cout << "Sorry, I could not understand that. Please re-enter your "
-                   "answer." << std::endl;
+                   "answer."
+                << std::endl;
     }
   };
 
@@ -350,7 +411,7 @@ void verbsPractise() {
     int pronounInt = randomInt(3, 8);
 
     std::cout << std::endl
-              << "-+======================================+-" << std::endl;
+              << "-+======================================+-" << std::endl << std::endl;
 
     std::string pronoun = getElement(tenseFileName, 1, pronounInt);
     std::string verb = getElement(tenseFileName, verbInt, 1);
@@ -369,7 +430,7 @@ void verbsPractise() {
       std::cout << "No :( The correct word was " << verbConj;
     };
 
-    std::cout << " (" << Score.correct << " / " << Score.incorrect << ")"
+    std::cout << std::endl << " (" << Score.correct << " / " << Score.incorrect << ")"
               << std::endl;
 
     counter++;
@@ -536,6 +597,7 @@ std::string getElementChar(std::string fileName, int row, int column) {
   if (strVector.at(g)[0] == ' ') {
     strVector.at(g).erase(strVector.at(g).begin());
   };
+  
   return strVector.at(g);
 }
 

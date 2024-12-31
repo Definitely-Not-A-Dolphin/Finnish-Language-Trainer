@@ -1,0 +1,15 @@
+This program was made by me (Derek). 
+For no particular reason, I learning the Finnish language, which is quite a challange.
+'\n'
+About me:
+I am a boy from The Netherlands with not too much programming experience. 
+I am more of a math guy, but have recently been doing a lot of programming.
+I only know two programming languages: Python and C++. 
+I originally decided to learn C++ for better accuraccy for programs that could calculate pi and e, which really worked.
+HTML will soon join that list, since because a friend gave me a webdomain for 2 years, https://geen-dolfijn.nl/, check it out sometime. 
+
+
+About the program:
+This program is written in C++, and uses a lot of fstream, so the vocab can be stored in seperate CSV's. 
+Any help regarding the words, cases and verbs is absolutely welcome! 
+You are currently using the fourth version of the program, since I had to rewrite it trice (never again).  
