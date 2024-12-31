@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-// Header
+// Soon-to-be Headers
 void pointerMover(std::ifstream &file, int k);
 int randomInt(int lower, int upper) {
   std::random_device rd;
@@ -48,10 +48,8 @@ void getEngPractise(std::string fileName, int line);
 void getFinPractise(std::string fileName, int line, int finCase);
 std::string getEng(std::string fileName, int line);
 std::string getFin(std::string fileName, int line, int finCase);
-// Not used anymore, but I decided to keep it in, I might need it later as a
-// temporary substitute if its char-version stops functioning for whatever
-// reason it may be.
 std::string getElement(std::string fileName, int row, int column);
+// Not used anymore, but I decided to keep it in, I might need it later.
 std::string getElementChar(std::string fileName, int row, int column);
 
 // Practices
@@ -119,9 +117,6 @@ int main() {
       }
     };
     wordAmountQuestion();
-
-    if (Answer.wordAmount == 0) {
-    };
 
     if (Answer.wordTypeInt != 5) {
       standardPractise(Answer.wordTypeString, Answer.random, Answer.language,
@@ -318,16 +313,36 @@ void standardPractise(std::string fileName, bool random, std::string language,
 }
 
 void verbsPractise() {
-  std::ifstream file("verbsFile.csv", std::ios::in);
 
-  // std::cout << fileSize("verbsFile.csv") << std::endl;
+  std::cout << "What tense do you want to practise:" << std::endl
+            << "  Preesens (present tense) (type 1)," << std::endl
+            << "  Imperfekti (past tense) (type 2)," << std::endl;
+  int tenseInt;
+  std::cin >> tenseInt;
+
+  std::string tenseFileName;
+
+  while (true) {
+    if (tenseInt == 1) {
+      tenseFileName = "verbsFilePreesens.csv";
+      break;
+    } else if (tenseInt == 2) {
+      tenseFileName = "verbsFileImperfekti.csv";
+      break;
+    } else {
+      std::cout << "Sorry, I could not understand that. Please re-enter your "
+                   "answer." << std::endl;
+    }
+  };
+
+  std::ifstream file(tenseFileName, std::ios::in);
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = (fileSize("verbsFile.csv") - 1) * 6;
+    Answer.wordAmount = (fileSize(tenseFileName) - 1) * 6;
   };
 
   int counter = 0;
-  int maxLine = fileSize("verbsFile.csv");
+  int maxLine = fileSize(tenseFileName);
 
   while (counter != Answer.wordAmount) {
 
@@ -337,10 +352,9 @@ void verbsPractise() {
     std::cout << std::endl
               << "-+======================================+-" << std::endl;
 
-    // Tot hier gaat alles goed!
-    std::string pronoun = getElement("verbsFile.csv", 1, pronounInt);
-    std::string verb = getElement("verbsFile.csv", verbInt, 1);
-    std::string verbConj = getElement("verbsFile.csv", verbInt, pronounInt);
+    std::string pronoun = getElement(tenseFileName, 1, pronounInt);
+    std::string verb = getElement(tenseFileName, verbInt, 1);
+    std::string verbConj = getElement(tenseFileName, verbInt, pronounInt);
 
     std::string verbConjInput;
     std::cout << "Enter the correct conjugation with the verb " << verb << ": "
