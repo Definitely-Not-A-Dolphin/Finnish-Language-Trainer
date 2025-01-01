@@ -78,7 +78,59 @@ void readAboutProgram() {
   readFile.close();
 };
 void readAboutGrammar() {
+  int startDec2;
 
+  while (true) {
+    std::cout << std::endl
+              << "Choose what you want to read about" << std::endl
+              << "  Nominatiivi (type 1), " << std::endl
+              << "  Genitiivi (type 2), " << std::endl
+              << "  Akkusatiivi (type 3)," << std::endl
+              << "  Partitiivi (type 4)," << std::endl
+              << "  Inessiivi (type 5)," << std::endl
+              << "  Preesens (type 6)," << std::endl
+              << "  Imperfekti (type 7)," << std::endl;
+    std::cin >> startDec2;
+
+    if (0 <= startDec2 and startDec2 <= 7) {
+      break;
+    } else {
+      std::cout << "That's not a valid input, please try again." << std::endl;
+    };
+  };
+
+  std::cout << std::endl;
+
+  switch (startDec2) {
+  case 1:
+    std::fstream file{"readAboutFiles/aboutNominatiivi.txt"};
+    break;
+  case 2:
+    std::fstream file{"readAboutFiles/aboutGenitiivi.txt"};
+    break;
+  case 3:
+    std::fstream file{"readAboutFiles/aboutAkkusatiivi.txt"};
+    break;
+  case 4:
+    std::fstream file{"readAboutFiles/aboutPartitiivi.txt"};
+    break;
+  case 5:
+    std::fstream file{"readAboutFiles/aboutInessiivi.txt"};
+    break;
+  case 6:
+    std::fstream file{"readAboutFiles/aboutPreesens.txt"};
+    break;
+  case 7:
+    std::fstream file{"readAboutFiles/aboutImperfekti.txt"};
+    break;
+  };
+
+  std::string temp;
+  while (getline(file, temp)) {
+    std::cout << temp << std::endl;
+  };
+
+  file.close();
 };
 
 struct {
@@ -621,7 +673,7 @@ std::string trimWhiteSpace(std::string input) {
   if (input[0] == ' ') {
     input.erase(input.begin());
   };
-  
+
   while (input[input.size() - 1] == ' ') {
     input.pop_back();
   };

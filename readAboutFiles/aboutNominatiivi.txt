@@ -1,0 +1,2 @@
+The nominatiivi is the standard case: if no other cases apply, then use the nominatiivi.
+Plurals in the nominatiivi are usually with ~t.
