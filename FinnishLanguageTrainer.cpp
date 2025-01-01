@@ -41,7 +41,7 @@ bool vectorCheckerInt(std::vector<int> searchedVector, int searchedInt) {
 
   return result;
 }
-int fileSize(std::string fileName);
+int fileSize(std::ifstream &file);
 std::string trimWhiteSpace(std::string input);
 
 // Get functions
@@ -49,7 +49,7 @@ void getEngPractise(std::string fileName, int line);
 void getFinPractise(std::string fileName, int line, int finCase);
 std::string getEng(std::string fileName, int line);
 std::string getFin(std::string fileName, int line, int finCase);
-std::string getElement(std::string fileName, int row, int column);
+std::string getElement(std::ifstream &file, int row, int column);
 // Not used anymore, but I decided to keep it in, I might need it later.
 std::string getElementChar(std::string fileName, int row, int column);
 
@@ -100,30 +100,33 @@ void readAboutGrammar() {
   };
 
   std::cout << std::endl;
+  std::string polk;
 
   switch (startDec2) {
   case 1:
-    std::fstream file{"readAboutFiles/aboutNominatiivi.txt"};
+    polk = "readAboutFiles/aboutNominatiivi.txt";
     break;
   case 2:
-    std::fstream file{"readAboutFiles/aboutGenitiivi.txt"};
+    polk = "readAboutFiles/aboutGenitiivi.txt";
     break;
   case 3:
-    std::fstream file{"readAboutFiles/aboutAkkusatiivi.txt"};
+    polk = "readAboutFiles/aboutAkkusatiivi.txt";
     break;
   case 4:
-    std::fstream file{"readAboutFiles/aboutPartitiivi.txt"};
+    polk = "readAboutFiles/aboutPartitiivi.txt";
     break;
   case 5:
-    std::fstream file{"readAboutFiles/aboutInessiivi.txt"};
+    polk = "readAboutFiles/aboutInessiivi.txt";
     break;
   case 6:
-    std::fstream file{"readAboutFiles/aboutPreesens.txt"};
+    polk = "readAboutFiles/aboutPreesens.txt";
     break;
   case 7:
-    std::fstream file{"readAboutFiles/aboutImperfekti.txt"};
+    polk = "readAboutFiles/aboutImperfekti.txt";
     break;
   };
+
+  std::fstream file(polk);
 
   std::string temp;
   while (getline(file, temp)) {
@@ -369,11 +372,11 @@ void standardPractise(std::string fileName, bool random, std::string language,
   std::ifstream file(fileName, std::ios::in);
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = fileSize(fileName) - 1;
+    Answer.wordAmount = fileSize(file) - 1;
   };
 
   int counter = 0;
-  int maxLine = fileSize(fileName);
+  int maxLine = fileSize(file);
 
   if (random) {
     while (true) {
@@ -426,7 +429,6 @@ void standardPractise(std::string fileName, bool random, std::string language,
 }
 
 void verbsPractise() {
-
   std::cout << "What tense do you want to practise:" << std::endl
             << "  Preesens (present tense) (type 1)," << std::endl
             << "  Imperfekti (past tense) (type 2)," << std::endl;
@@ -449,14 +451,26 @@ void verbsPractise() {
     }
   };
 
-  std::ifstream file(tenseFileName, std::ios::in);
+  std::string plok;
+
+  switch (tenseInt) {
+  case 1:
+    plok = "wordsFiles/verbs/verbsFilePreesens.csv";
+    break;
+  case 2:
+    plok = "wordsFile/verbs/verbsFileImperfekti.csv";
+    break;
+  };
+
+  std::fstream fileDirec{plok};
+  std::ifstream file2(tenseFileName, std::ios::in);
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = (fileSize(tenseFileName) - 1) * 6;
+    Answer.wordAmount = (fileSize(file2) - 1) * 6;
   };
 
   int counter = 0;
-  int maxLine = fileSize(tenseFileName);
+  int maxLine = fileSize(file2);
 
   while (counter != Answer.wordAmount) {
 
@@ -467,9 +481,10 @@ void verbsPractise() {
               << "-+======================================+-" << std::endl
               << std::endl;
 
-    std::string pronoun = getElement(tenseFileName, 1, pronounInt);
-    std::string verb = getElement(tenseFileName, verbInt, 1);
-    std::string verbConj = getElement(tenseFileName, verbInt, pronounInt);
+    //Fix dit
+    std::string pronoun = getElement(fileDirec, 1, pronounInt);
+    std::string verb = getElement(fileDirec, verbInt, 1);
+    std::string verbConj = getElement(fileDirec, verbInt, pronounInt);
 
     std::string verbConjInput;
     std::cout << "Enter the correct conjugation with the verb " << verb << ": "
@@ -491,7 +506,8 @@ void verbsPractise() {
     counter++;
   };
 
-  file.close();
+  fileDirec.close();
+  file2.close();
 }
 
 void getFinPractise(std::string fileName, int line, int finCase) {
@@ -546,31 +562,15 @@ void getEngPractise(std::string fileName, int line) {
   file.close();
 }
 
-std::string getEng(std::string fileName, int line) {
-
-  std::ifstream file(fileName, std::ios::in);
-
-  std::string wordFin = getElement(fileName, line, 1);
-
-  file.close();
-
-  return wordFin;
+std::string getEng(std::ifstream &file, int line) {
+  return getElement(file, line, 1);
 }
 
-std::string getFin(std::string fileName, int line, int finCase) {
-
-  std::ifstream file(fileName, std::ios::in);
-
-  std::string wordFin = getElement(fileName, line, finCase + 1);
-
-  file.close();
-
-  return wordFin;
+std::string getFin(std::ifstream &file, int line, int finCase) {
+  return getElement(file, line, finCase + 1);
 }
 
-std::string getElement(std::string fileName, int row, int column) {
-
-  std::ifstream file(fileName, std::ios::in);
+std::string getElement(std::ifstream &file, int row, int column) {
 
   pointerMover(file, row);
 
@@ -579,14 +579,18 @@ std::string getElement(std::string fileName, int row, int column) {
   std::vector<std::string> wordsVector = {};
 
   while (getline(file, output, ',')) {
-    output = trimWhiteSpace(output);
+    if (output[0] == ' ') {
+      output.erase(output.begin());
+    };
+
+    while (output[output.size() - 1] == ' ') {
+      output.pop_back();
+    };
 
     wordsVector.push_back(output);
 
     output.erase();
   };
-
-  file.close();
 
   return wordsVector.at(column - 1);
 }
@@ -681,17 +685,13 @@ std::string trimWhiteSpace(std::string input) {
   return input;
 };
 
-int fileSize(std::string fileName) {
-  std::ifstream file(fileName, std::ios::in);
-
+int fileSize(std::ifstream &file) {
   int lineCounter = 0;
   std::string output;
 
-  while (getline(file, output, '\n')) {
-    lineCounter += 1;
+  while (getline(file, output)) {
+    lineCounter++;
   };
-
-  file.close();
 
   return lineCounter;
 }
