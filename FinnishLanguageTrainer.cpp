@@ -42,6 +42,7 @@ bool vectorCheckerInt(std::vector<int> searchedVector, int searchedInt) {
   return result;
 }
 int fileSize(std::string fileName);
+std::string trimWhiteSpace(std::string input);
 
 // Get functions
 void getEngPractise(std::string fileName, int line);
@@ -411,7 +412,8 @@ void verbsPractise() {
     int pronounInt = randomInt(3, 8);
 
     std::cout << std::endl
-              << "-+======================================+-" << std::endl << std::endl;
+              << "-+======================================+-" << std::endl
+              << std::endl;
 
     std::string pronoun = getElement(tenseFileName, 1, pronounInt);
     std::string verb = getElement(tenseFileName, verbInt, 1);
@@ -430,7 +432,8 @@ void verbsPractise() {
       std::cout << "No :( The correct word was " << verbConj;
     };
 
-    std::cout << std::endl << " (" << Score.correct << " / " << Score.incorrect << ")"
+    std::cout << std::endl
+              << " (" << Score.correct << " / " << Score.incorrect << ")"
               << std::endl;
 
     counter++;
@@ -524,10 +527,7 @@ std::string getElement(std::string fileName, int row, int column) {
   std::vector<std::string> wordsVector = {};
 
   while (getline(file, output, ',')) {
-
-    if (output[0] == ' ') {
-      output.erase(output.begin());
-    };
+    output = trimWhiteSpace(output);
 
     wordsVector.push_back(output);
 
@@ -539,8 +539,8 @@ std::string getElement(std::string fileName, int row, int column) {
   return wordsVector.at(column - 1);
 }
 
-// this function is not used because it is whacky (reference to my collegue
-// whose name is wh4cky) and finite, its here for the sake of being here
+// this function is not used because it is whacky and cannot be used
+// indefinitely, its here for the sake of being here
 std::string getElementChar(std::string fileName, int row, int column) {
 
   std::ifstream readFile(fileName, std::ios::in);
@@ -597,7 +597,7 @@ std::string getElementChar(std::string fileName, int row, int column) {
   if (strVector.at(g)[0] == ' ') {
     strVector.at(g).erase(strVector.at(g).begin());
   };
-  
+
   return strVector.at(g);
 }
 
@@ -616,6 +616,18 @@ void pointerMover(std::ifstream &file, int k) {
     }
   }
 }
+
+std::string trimWhiteSpace(std::string input) {
+  if (input[0] == ' ') {
+    input.erase(input.begin());
+  };
+  
+  while (input[input.size() - 1] == ' ') {
+    input.pop_back();
+  };
+
+  return input;
+};
 
 int fileSize(std::string fileName) {
   std::ifstream file(fileName, std::ios::in);
