@@ -45,16 +45,16 @@ int fileSize(std::ifstream &file);
 std::string trimWhiteSpace(std::string input);
 
 // Get functions
-void getEngPractise(std::string fileName, int line);
-void getFinPractise(std::string fileName, int line, int finCase);
-std::string getEng(std::string fileName, int line);
-std::string getFin(std::string fileName, int line, int finCase);
+void getEngPractise(std::ifstream &file, int line);
+void getFinPractise(std::ifstream &file, int line, int finCase);
+std::string getEng(std::ifstream &file, int line);
+std::string getFin(std::ifstream &file, int line, int finCase);
 std::string getElement(std::ifstream &file, int row, int column);
 // Not used anymore, but I decided to keep it in, I might need it later.
 std::string getElementChar(std::string fileName, int row, int column);
 
 // Practices
-void standardPractise(std::string fileName, bool random, std::string language,
+void standardPractise(int wordTypeInt, bool random, std::string language,
                       int finCase);
 void verbsPractise();
 
@@ -160,9 +160,11 @@ struct {
   std::vector<std::string> cases = {"Nominatiivi", "Genitiivi",   "Akkusatiivi",
                                     "Partitiivi",  "nominatiivi", "genitiivi",
                                     "akkusatiivi", "partitiivi"};
-  std::vector<std::string> wordType = {"adjectivesFile.csv", "nounsFile.csv",
-                                       "numbersFile.csv",    "pronounsFile.csv",
-                                       "verbsFile.csv",      "otherFile.csv"};
+  //verbsFile.csv doesnt exist anymore, it is solely a placeholder for the directory that bears a part of its name.
+  std::vector<std::string> wordType = {
+      "wordsFiles/adjectivesFile.csv", "wordsFiles/nounsFile.csv",
+      "wordsFiles/numbersFile.csv",    "wordsFiles/pronounsFile.csv",
+      "wordsFiles/verbsFile.csv",      "wordsFiles/otherFile.csv"};
   std::vector<std::string> gradeMessage = {
       "This is too hard for you. Have you considered Swedish?",
       "Were you even trying?",
@@ -220,7 +222,7 @@ int main() {
         wordAmountQuestion();
 
         if (Answer.wordTypeInt != 5) {
-          standardPractise(Answer.wordTypeString, Answer.random,
+          standardPractise(Answer.wordTypeInt, Answer.random,
                            Answer.language, Answer.finCase);
         } else if (Answer.wordTypeInt == 5) {
           verbsPractise();
@@ -288,11 +290,8 @@ void wordTypeQuestion() {
     }
   };
 
-  if (Answer.wordTypeInt != 5) {
-    Answer.wordTypeString = Vector.wordType.at(Answer.wordTypeInt - 1);
-  } else if (Answer.wordTypeInt == 5) {
-    Answer.wordTypeString = Vector.wordType.at(4);
-  }
+  
+  Answer.wordTypeString = Vector.wordType.at(Answer.wordTypeInt - 1);
 }
 void languageQuestion() {
   while (true) {
@@ -367,9 +366,12 @@ void randomQuestion() {
   };
 }
 
-void standardPractise(std::string fileName, bool random, std::string language,
+void standardPractise(int wordTypeInt, bool random, std::string language,
                       int finCase) {
-  std::ifstream file(fileName, std::ios::in);
+
+  std::string fileDirecName = Vector.wordType.at(Answer.wordTypeInt);
+
+  std::ifstream file(fileDirecName);
 
   if (Answer.wordAmount == 0) {
     Answer.wordAmount = fileSize(file) - 1;
@@ -378,18 +380,17 @@ void standardPractise(std::string fileName, bool random, std::string language,
   int counter = 0;
   int maxLine = fileSize(file);
 
-  if (random) {
-    while (true) {
-
+  if (Answer.random) {
+    while (true) {  
       int randomNumber = randomInt(2, maxLine);
 
       std::cout << std::endl
                 << "-+======================================+-" << std::endl;
 
       if (language == "English" or language == "english") {
-        getEngPractise(fileName, randomNumber);
+        getEngPractise(file, randomNumber);
       } else {
-        getFinPractise(fileName, randomNumber, finCase);
+        getFinPractise(file, randomNumber, finCase);
       };
 
       counter++;
@@ -406,13 +407,13 @@ void standardPractise(std::string fileName, bool random, std::string language,
       std::cout << "-+======================================+-" << std::endl;
 
       if (language == "English" or language == "english") {
-        getEngPractise(fileName, line);
+        getEngPractise(file, line);
       } else {
-        getFinPractise(fileName, line, finCase);
+        getFinPractise(file, line, finCase);
       };
 
-      counter += 1;
-      line += 1;
+      counter++;
+      line++;
 
       if (counter == Answer.wordAmount) {
         break;
@@ -458,19 +459,18 @@ void verbsPractise() {
     plok = "wordsFiles/verbs/verbsFilePreesens.csv";
     break;
   case 2:
-    plok = "wordsFile/verbs/verbsFileImperfekti.csv";
+    plok = "wordsFiles/verbs/verbsFileImperfekti.csv";
     break;
   };
 
-  std::fstream fileDirec{plok};
-  std::ifstream file2(tenseFileName, std::ios::in);
+  std::ifstream fileDirec{plok};
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = (fileSize(file2) - 1) * 6;
+    Answer.wordAmount = (fileSize(fileDirec) - 1) * 6;
   };
 
   int counter = 0;
-  int maxLine = fileSize(file2);
+  int maxLine = fileSize(fileDirec);
 
   while (counter != Answer.wordAmount) {
 
@@ -481,7 +481,7 @@ void verbsPractise() {
               << "-+======================================+-" << std::endl
               << std::endl;
 
-    //Fix dit
+    // Fix dit
     std::string pronoun = getElement(fileDirec, 1, pronounInt);
     std::string verb = getElement(fileDirec, verbInt, 1);
     std::string verbConj = getElement(fileDirec, verbInt, pronounInt);
@@ -507,15 +507,12 @@ void verbsPractise() {
   };
 
   fileDirec.close();
-  file2.close();
 }
 
-void getFinPractise(std::string fileName, int line, int finCase) {
-  std::ifstream file(fileName, std::ios::in);
+void getFinPractise(std::ifstream &file, int line, int finCase) {
+  std::string wordEng = getEng(file, line);
 
-  std::string wordEng = getEng(fileName, line);
-
-  std::string wordFin = getFin(fileName, line, finCase);
+  std::string wordFin = getFin(file, line, finCase);
 
   std::string wordFinInput;
   std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
@@ -532,16 +529,12 @@ void getFinPractise(std::string fileName, int line, int finCase) {
 
   std::cout << " (" << Score.correct << " / " << Score.incorrect << ")"
             << std::endl;
-
-  file.close();
 }
 
-void getEngPractise(std::string fileName, int line) {
-  std::ifstream file(fileName, std::ios::in);
+void getEngPractise(std::ifstream &file, int line) {
+  std::string wordEng = getEng(file, line);
 
-  std::string wordEng = getEng(fileName, line);
-
-  std::string wordFin = getFin(fileName, line, 1);
+  std::string wordFin = getFin(file, line, 1);
 
   std::string wordEngInput;
   std::cout << std::endl << "What is the Finnish word for " << wordFin << "? ";
@@ -558,8 +551,6 @@ void getEngPractise(std::string fileName, int line) {
 
   std::cout << " (" << Score.correct << " / " << Score.incorrect << ")"
             << std::endl;
-
-  file.close();
 }
 
 std::string getEng(std::ifstream &file, int line) {
@@ -579,13 +570,7 @@ std::string getElement(std::ifstream &file, int row, int column) {
   std::vector<std::string> wordsVector = {};
 
   while (getline(file, output, ',')) {
-    if (output[0] == ' ') {
-      output.erase(output.begin());
-    };
-
-    while (output[output.size() - 1] == ' ') {
-      output.pop_back();
-    };
+    output = trimWhiteSpace(output);
 
     wordsVector.push_back(output);
 
@@ -678,12 +663,12 @@ std::string trimWhiteSpace(std::string input) {
     input.erase(input.begin());
   };
 
-  while (input[input.size() - 1] == ' ') {
-    input.pop_back();
-  };
+  //while (input[input.size() - 1] == ' ') {
+  //  input.pop_back();
+  //};
 
   return input;
-};
+}
 
 int fileSize(std::ifstream &file) {
   int lineCounter = 0;
