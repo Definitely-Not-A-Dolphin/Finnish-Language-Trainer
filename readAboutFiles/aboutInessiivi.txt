@@ -1,0 +1,59 @@
+The inessive case is used for the following things:
+- When something is in something else,
+- When something contains something,
+- With käydä,
+- When two objects are closely related,
+- Expressing time,
+- When referring to words that require the partitive,
+- and more
+
+When somthing is in something else:
+Asun Suomessa.
+I live in Finland.
+
+When something contains something:
+This is pretty much the same as the previous use:
+
+Puussa in lintu.
+In the tree is a bird.
+
+With käydä:
+The verb käydä (to visit) requires the inessive case:
+Käydän Virossa.
+I visit Estonia.
+
+Käydämme Saksassa.
+We are visiting Germany.
+
+When two objects are closely related:
+puhelimessa.
+on the phone.
+
+Expressing time:
+Viidessa minuutissa. (viidessa is also inessive, because it refers to minuutissa)
+In five minutes.
+
+How to form the inessive:
+If a word ends in ~a, ~ä, ~o, ~ö, ~u, ~y:
+- Apply KPT-rule if necessary,
+- Add ~ssa or ~ssä
+
+If a word ends in ~e:
+- Apply KPT-rule if necessary,
+- Add ~essa or ~essä
+
+If a word ends in ~i:
+- Remove ~i,
+- Add ~essa or ~essä
+
+If a word ends in ~si:
+- Replace ~si with ~de,
+- Add ~essa or ~essä
+
+If a word ends in ~nen:
+- Replace ~nen with ~se,
+- Add ~ssa or ~ssä
+
+If a word is considered new (mostly loanwords):
+- Apply KPT-rule if necessary,
+- Add ~ssa or ~ssä

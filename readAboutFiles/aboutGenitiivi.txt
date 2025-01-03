@@ -1,6 +1,8 @@
 The genitive case is used for the following things:
-- 1
-- 2
+- To indicate possesion,
+- Before a postposition,
+- When using necessities,
+- When reffering to a whole object,
+- When referring to words that require the genitive.
 
-Its endings include:
-- n
+There are rules for forming the genitive case of a word, but I haven't quite figured them all out yet.

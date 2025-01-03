@@ -100,32 +100,15 @@ void readAboutGrammar() {
   };
 
   std::cout << std::endl;
-  std::string polk;
 
-  switch (startDec2) {
-  case 1:
-    polk = "readAboutFiles/aboutNominatiivi.txt";
-    break;
-  case 2:
-    polk = "readAboutFiles/aboutGenitiivi.txt";
-    break;
-  case 3:
-    polk = "readAboutFiles/aboutAkkusatiivi.txt";
-    break;
-  case 4:
-    polk = "readAboutFiles/aboutPartitiivi.txt";
-    break;
-  case 5:
-    polk = "readAboutFiles/aboutInessiivi.txt";
-    break;
-  case 6:
-    polk = "readAboutFiles/aboutPreesens.txt";
-    break;
-  case 7:
-    polk = "readAboutFiles/aboutImperfekti.txt";
-    break;
-  };
-
+  std::vector<std::string> polkVector = {"readAboutFiles/aboutNominatiivi.txt",
+                                         "readAboutFiles/aboutGenitiivi.txt",
+                                         "readAboutFiles/aboutAkkusatiivi.txt",
+                                         "readAboutFiles/aboutPartitiivi.txt",
+                                         "readAboutFiles/aboutInessiivi.txt",
+                                         "readAboutFiles/aboutPreesens.txt",
+                                         "readAboutFiles/aboutImperfekti.txt"};
+  std::string polk = polkVector.at(startDec2 - 1);
   std::fstream file(polk);
 
   std::string temp;
@@ -160,7 +143,8 @@ struct {
   std::vector<std::string> cases = {"Nominatiivi", "Genitiivi",   "Akkusatiivi",
                                     "Partitiivi",  "nominatiivi", "genitiivi",
                                     "akkusatiivi", "partitiivi"};
-  //verbsFile.csv doesnt exist anymore, it is solely a placeholder for the directory that bears a part of its name.
+  // verbsFile.csv doesnt exist anymore, it is solely a placeholder for the
+  // directory that bears a part of its name.
   std::vector<std::string> wordType = {
       "wordsFiles/adjectivesFile.csv", "wordsFiles/nounsFile.csv",
       "wordsFiles/numbersFile.csv",    "wordsFiles/pronounsFile.csv",
@@ -222,8 +206,8 @@ int main() {
         wordAmountQuestion();
 
         if (Answer.wordTypeInt != 5) {
-          standardPractise(Answer.wordTypeInt, Answer.random,
-                           Answer.language, Answer.finCase);
+          standardPractise(Answer.wordTypeInt, Answer.random, Answer.language,
+                           Answer.finCase);
         } else if (Answer.wordTypeInt == 5) {
           verbsPractise();
         };
@@ -290,7 +274,6 @@ void wordTypeQuestion() {
     }
   };
 
-  
   Answer.wordTypeString = Vector.wordType.at(Answer.wordTypeInt - 1);
 }
 void languageQuestion() {
@@ -369,7 +352,7 @@ void randomQuestion() {
 void standardPractise(int wordTypeInt, bool random, std::string language,
                       int finCase) {
 
-  std::string fileDirecName = Vector.wordType.at(Answer.wordTypeInt);
+  std::string fileDirecName = Vector.wordType.at(Answer.wordTypeInt - 1);
 
   std::ifstream file(fileDirecName);
 
@@ -381,7 +364,7 @@ void standardPractise(int wordTypeInt, bool random, std::string language,
   int maxLine = fileSize(file);
 
   if (Answer.random) {
-    while (true) {  
+    while (true) {
       int randomNumber = randomInt(2, maxLine);
 
       std::cout << std::endl
@@ -663,9 +646,9 @@ std::string trimWhiteSpace(std::string input) {
     input.erase(input.begin());
   };
 
-  //while (input[input.size() - 1] == ' ') {
-  //  input.pop_back();
-  //};
+  while (input[input.size() - 1] == ' ') {
+    input.pop_back();
+  };
 
   return input;
 }
