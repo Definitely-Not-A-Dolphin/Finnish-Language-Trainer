@@ -7,8 +7,11 @@
 #include <string>
 #include <vector>
 
+// Headers
+#include "Headers/fileSize.cpp"
+#include "Headers/getElement.cpp"
+
 // Soon-to-be Headers
-void pointerMover(std::ifstream &file, int k);
 int randomInt(int lower, int upper) {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -41,17 +44,12 @@ bool vectorCheckerInt(std::vector<int> searchedVector, int searchedInt) {
 
   return result;
 }
-int fileSize(std::ifstream &file);
-std::string trimWhiteSpace(std::string input);
 
 // Get functions
-void getEngPractise(std::ifstream &file, int line);
-void getFinPractise(std::ifstream &file, int line, int finCase);
-std::string getEng(std::ifstream &file, int line);
-std::string getFin(std::ifstream &file, int line, int finCase);
-std::string getElement(std::ifstream &file, int row, int column);
-// Not used anymore, but I decided to keep it in, I might need it later.
-std::string getElementChar(std::string fileName, int row, int column);
+void getEngPractise(std::fstream &file, int line);
+void getFinPractise(std::fstream &file, int line, int finCase);
+std::string getEng(std::fstream &file, int line);
+std::string getFin(std::fstream &file, int line, int finCase);
 
 // Practices
 void standardPractise(int wordTypeInt, bool random, std::string language,
@@ -67,7 +65,7 @@ void randomQuestion();
 
 // ReadStuff
 void readAboutProgram() {
-  std::ifstream readFile("aboutProgram.txt", std::ios::in);
+  std::fstream readFile("aboutProgram.txt", std::ios::in);
 
   std::string filler;
 
@@ -354,14 +352,14 @@ void standardPractise(int wordTypeInt, bool random, std::string language,
 
   std::string fileDirecName = Vector.wordType.at(Answer.wordTypeInt - 1);
 
-  std::ifstream file(fileDirecName);
+  std::fstream file(fileDirecName);
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = fileSize(file) - 1;
+    Answer.wordAmount = fileSize(fileDirecName) - 1;
   };
 
   int counter = 0;
-  int maxLine = fileSize(file);
+  int maxLine = fileSize(fileDirecName);
 
   if (Answer.random) {
     while (true) {
@@ -403,8 +401,8 @@ void standardPractise(int wordTypeInt, bool random, std::string language,
       };
 
       if (line > maxLine) {
-        file.seekg(0, std::ifstream::beg);
-        pointerMover(file, 2);
+        file.seekg(0, std::fstream::beg);
+        seekLine(file, 2);
       }
     }
   };
@@ -446,14 +444,14 @@ void verbsPractise() {
     break;
   };
 
-  std::ifstream fileDirec{plok};
+  std::fstream fileDirec{plok};
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = (fileSize(fileDirec) - 1) * 6;
+    Answer.wordAmount = (fileSize(plok) - 1) * 6;
   };
 
   int counter = 0;
-  int maxLine = fileSize(fileDirec);
+  int maxLine = fileSize(plok);
 
   while (counter != Answer.wordAmount) {
 
@@ -464,7 +462,6 @@ void verbsPractise() {
               << "-+======================================+-" << std::endl
               << std::endl;
 
-    // Fix dit
     std::string pronoun = getElement(fileDirec, 1, pronounInt);
     std::string verb = getElement(fileDirec, verbInt, 1);
     std::string verbConj = getElement(fileDirec, verbInt, pronounInt);
@@ -492,7 +489,7 @@ void verbsPractise() {
   fileDirec.close();
 }
 
-void getFinPractise(std::ifstream &file, int line, int finCase) {
+void getFinPractise(std::fstream &file, int line, int finCase) {
   std::string wordEng = getEng(file, line);
 
   std::string wordFin = getFin(file, line, finCase);
@@ -514,7 +511,7 @@ void getFinPractise(std::ifstream &file, int line, int finCase) {
             << std::endl;
 }
 
-void getEngPractise(std::ifstream &file, int line) {
+void getEngPractise(std::fstream &file, int line) {
   std::string wordEng = getEng(file, line);
 
   std::string wordFin = getFin(file, line, 1);
@@ -536,130 +533,10 @@ void getEngPractise(std::ifstream &file, int line) {
             << std::endl;
 }
 
-std::string getEng(std::ifstream &file, int line) {
+std::string getEng(std::fstream &file, int line) {
   return getElement(file, line, 1);
 }
 
-std::string getFin(std::ifstream &file, int line, int finCase) {
+std::string getFin(std::fstream &file, int line, int finCase) {
   return getElement(file, line, finCase + 1);
-}
-
-std::string getElement(std::ifstream &file, int row, int column) {
-
-  pointerMover(file, row);
-
-  std::string output;
-
-  std::vector<std::string> wordsVector = {};
-
-  while (getline(file, output, ',')) {
-    output = trimWhiteSpace(output);
-
-    wordsVector.push_back(output);
-
-    output.erase();
-  };
-
-  return wordsVector.at(column - 1);
-}
-
-// this function is not used because it is whacky and cannot be used
-// indefinitely, its here for the sake of being here
-std::string getElementChar(std::string fileName, int row, int column) {
-
-  std::ifstream readFile(fileName, std::ios::in);
-
-  pointerMover(readFile, row);
-
-  struct {
-    char thing1[36];
-    char thing2[36];
-    char thing3[36];
-    char thing4[36];
-    char thing5[36];
-    char thing6[36];
-    char thing7[36];
-    char thing8[36];
-    char thing9[36];
-  } val;
-
-  struct {
-    std::string thing1;
-    std::string thing2;
-    std::string thing3;
-    std::string thing4;
-    std::string thing5;
-    std::string thing6;
-    std::string thing7;
-    std::string thing8;
-    std::string thing9;
-  } tpt;
-
-  std::vector<char *> charVector = {val.thing1, val.thing2, val.thing3,
-                                    val.thing4, val.thing5, val.thing6,
-                                    val.thing7, val.thing8, val.thing9};
-
-  std::vector<std::string> strVector = {tpt.thing1, tpt.thing2, tpt.thing3,
-                                        tpt.thing4, tpt.thing5, tpt.thing6,
-                                        tpt.thing7, tpt.thing8, tpt.thing9};
-
-  int g;
-
-  for (int gloop = 1; gloop <= column; gloop++) {
-
-    readFile.get(charVector.at(gloop), 36, ',');
-    readFile.seekg(1, std::ifstream::cur);
-
-    strVector.at(gloop) = charVector.at(gloop);
-
-    if (gloop == column) {
-      readFile.close();
-      g = gloop;
-    };
-  };
-
-  if (strVector.at(g)[0] == ' ') {
-    strVector.at(g).erase(strVector.at(g).begin());
-  };
-
-  return strVector.at(g);
-}
-
-void pointerMover(std::ifstream &file, int k) {
-
-  // Special thanks to Elses/Menium for writing this part!
-
-  file.clear();
-  file.seekg(0, std::ios::beg);
-
-  std::string line;
-  for (int currentLine = 1; currentLine < k; currentLine++) {
-    if (!std::getline(file, line)) {
-      std::cerr << "Error: Line " << k << " does not exist!" << std::endl;
-      return;
-    }
-  }
-}
-
-std::string trimWhiteSpace(std::string input) {
-  if (input[0] == ' ') {
-    input.erase(input.begin());
-  };
-
-  while (input[input.size() - 1] == ' ') {
-    input.pop_back();
-  };
-
-  return input;
-}
-
-int fileSize(std::ifstream &file) {
-  int lineCounter = 0;
-  std::string output;
-
-  while (getline(file, output)) {
-    lineCounter++;
-  };
-
-  return lineCounter;
 }
