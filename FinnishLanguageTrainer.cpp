@@ -3,13 +3,12 @@
 #include <iostream>
 #include <list>
 #include <random>
-#include <sstream>
 #include <string>
 #include <vector>
 
 // Headers
-#include "Headers/fileSize.cpp"
-#include "Headers/getElement.cpp"
+//       "Headers/generalFileStream.cpp"
+#include "Headers/csvFileStream.cpp"
 
 // Soon-to-be Headers
 int randomInt(int lower, int upper) {
