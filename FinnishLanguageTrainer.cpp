@@ -1,7 +1,6 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <list>
 #include <random>
 #include <string>
 #include <vector>
@@ -9,6 +8,7 @@
 // Headers
 //       "Headers/generalFileStream.cpp"
 #include "Headers/csvFileStream.cpp"
+#include "Headers/randomInt.cpp"
 
 // Soon-to-be Headers
 int randomInt(int lower, int upper) {
@@ -27,7 +27,7 @@ bool vectorChecker(std::vector<std::string> searchedVector,
   for (std::string comparer : searchedVector) {
     if (comparer == searchedWord) {
       result = true;
-    }
+    };
   };
 
   return result;
@@ -50,7 +50,7 @@ void getFinPractise(std::fstream &file, int line, int finCase);
 std::string getEng(std::fstream &file, int line);
 std::string getFin(std::fstream &file, int line, int finCase);
 
-// Practices
+// Practice functions
 void standardPractise(int wordTypeInt, bool random, std::string language,
                       int finCase);
 void verbsPractise();
@@ -311,18 +311,16 @@ void caseQuestion() {
 }
 void wordAmountQuestion() {
   while (true) {
-    std::cout
-        << std::endl
-        << "How many words do you want to practise (type 0 if you want to "
-           "practise the amount of words in the selected catogory)? "
-        << std::endl;
+    std::cout << std::endl
+              << "How many words do you want to practise (there are "
+              << fileSize(Answer.wordTypeString) - 1 << " in the selected category)? " << std::endl;
     std::cin >> Answer.wordAmount;
 
     if (Answer.wordAmount >= 0) {
       break;
-    } else {
-      std::cout << "That's not a valid input, please try again." << std::endl;
     };
+
+    std::cout << "That's not a valid input, please try again." << std::endl;
   };
 }
 void randomQuestion() {
@@ -432,25 +430,25 @@ void verbsPractise() {
     }
   };
 
-  std::string plok;
+  std::string tenseFileNamePath;
 
   switch (tenseInt) {
   case 1:
-    plok = "wordsFiles/verbs/verbsFilePreesens.csv";
+    tenseFileNamePath = "wordsFiles/verbs/verbsFilePreesens.csv";
     break;
-  case 2:
-    plok = "wordsFiles/verbs/verbsFileImperfekti.csv";
+  case 2: 
+    tenseFileNamePath = "wordsFiles/verbs/verbsFileImperfekti.csv";
     break;
   };
 
-  std::fstream fileDirec{plok};
+  std::fstream fileDirec{tenseFileNamePath};
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = (fileSize(plok) - 1) * 6;
+    Answer.wordAmount = (fileSize(tenseFileNamePath) - 1) * 6;
   };
 
   int counter = 0;
-  int maxLine = fileSize(plok);
+  int maxLine = fileSize(tenseFileNamePath);
 
   while (counter != Answer.wordAmount) {
 
