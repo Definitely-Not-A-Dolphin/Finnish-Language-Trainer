@@ -11,15 +11,8 @@
 #include "Headers/randomInt.cpp"
 
 // Soon-to-be Headers
-int randomInt(int lower, int upper) {
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<> dis(lower, upper);
-
-  int randomX = dis(gen);
-
-  return randomX;
-}
+// These two functions will soon be the same, the replacement can be found in my
+// functions-repo if not yet implemented.
 bool vectorChecker(std::vector<std::string> searchedVector,
                    std::string searchedWord) {
   bool result = false;
@@ -56,11 +49,108 @@ void standardPractise(int wordTypeInt, bool random, std::string language,
 void verbsPractise();
 
 // Questions
-void wordTypeQuestion();
-void languageQuestion();
-void caseQuestion();
-void wordAmountQuestion();
-void randomQuestion();
+void wordTypeQuestion() {
+  while (true) {
+    std::cout << std::endl
+              << "What type of word would you like to practise? " << std::endl
+              << "  Adjectives (type 1), " << std::endl
+              << "  Nouns (type 2), " << std::endl
+              << "  Numbers (type 3), " << std::endl
+              << "  Pronouns (type 4), " << std::endl
+              << "  Verbs (type 5), " << std::endl;
+    std::cin >> Answer.wordTypeInt;
+
+    if (1 <= Answer.wordTypeInt <= 6) {
+      break;
+    } else {
+      std::cout << std::endl
+                << "Sorry, I could not understand that. Please re-enter your "
+                   "answer."
+                << std::endl;
+    }
+  };
+
+  Answer.wordTypeString = Vector.wordType.at(Answer.wordTypeInt - 1);
+}
+void languageQuestion() {
+  while (true) {
+    std::cout << std::endl
+              << "In what language would you like to practise the words "
+                 "(Finnish / English)? ";
+    std::getline(std::cin >> std::ws, Answer.language);
+
+    if (vectorChecker(Vector.language, Answer.language)) {
+      break;
+    } else {
+      std::cout << std::endl
+                << "Sorry, I could not understand that. Please re-enter your "
+                   "answer."
+                << std::endl;
+    }
+  };
+}
+void caseQuestion() {
+  while (true) {
+    std::cout << std::endl
+              << "What case would you like to practise? " << std::endl
+              << "  Nominatiivi (type 1), " << std::endl
+              << "  Genitiivi (type 2), " << std::endl
+              << "  Partitiivi (type 3), " << std::endl
+              << "  Akkusatiivi (type 4), " << std::endl
+              << "  Inessiivi (type 5)" << std::endl;
+    std::cin >> Answer.finCase;
+
+    if (1 <= Answer.finCase <= 5) {
+      break;
+    } else {
+      std::cout << std::endl
+                << "That's not a valid input, please try again." << std::endl;
+    }
+  }
+}
+void wordAmountQuestion() {
+  while (true) {
+
+    if (Vector.wordType.at(Answer.wordTypeInt - 1) ==
+        "wordsFiles/verbsFile.csv") {
+      std::cout << std::endl
+                << "How many words do you want to practise? " << std::endl;
+    } else {
+      std::cout << std::endl
+                << "How many words do you want to practise (there are "
+                << countLines(Answer.wordTypeString) - 1
+                << " in the selected category)? " << std::endl;
+    }
+
+    std::cin >> Answer.wordAmount;
+
+    if (Answer.wordAmount >= 0) {
+      break;
+    };
+
+    std::cout << "That's not a valid input, please try again." << std::endl;
+  };
+}
+void randomQuestion() {
+  while (true) {
+    std::string ans;
+    std::cout << std::endl << "Would you like to randomise the word order? ";
+    std::getline(std::cin >> std::ws, ans);
+
+    if (vectorChecker(Vector.yes, ans)) {
+      Answer.random = true;
+      break;
+    } else if (vectorChecker(Vector.no, ans)) {
+      Answer.random = false;
+      break;
+    } else {
+      std::cout << std::endl
+                << "Sorry, I could not understand that. Please re-enter your "
+                   "answer."
+                << std::endl;
+    }
+  };
+}
 
 // ReadStuff
 void readAboutProgram() {
@@ -249,101 +339,6 @@ int main() {
   return 0;
 }
 
-// Questions
-void wordTypeQuestion() {
-  while (true) {
-    std::cout << std::endl
-              << "What type of word would you like to practise? " << std::endl
-              << "  Adjectives (type 1), " << std::endl
-              << "  Nouns (type 2), " << std::endl
-              << "  Numbers (type 3), " << std::endl
-              << "  Pronouns (type 4), " << std::endl
-              << "  Verbs (type 5), " << std::endl;
-    std::cin >> Answer.wordTypeInt;
-
-    if (1 <= Answer.wordTypeInt <= 6) {
-      break;
-    } else {
-      std::cout << std::endl
-                << "Sorry, I could not understand that. Please re-enter your "
-                   "answer."
-                << std::endl;
-    }
-  };
-
-  Answer.wordTypeString = Vector.wordType.at(Answer.wordTypeInt - 1);
-}
-void languageQuestion() {
-  while (true) {
-    std::cout << std::endl
-              << "In what language would you like to practise the words "
-                 "(Finnish / English)? ";
-    std::getline(std::cin >> std::ws, Answer.language);
-
-    if (vectorChecker(Vector.language, Answer.language)) {
-      break;
-    } else {
-      std::cout << std::endl
-                << "Sorry, I could not understand that. Please re-enter your "
-                   "answer."
-                << std::endl;
-    }
-  };
-}
-void caseQuestion() {
-  while (true) {
-    std::cout << std::endl
-              << "What case would you like to practise? " << std::endl
-              << "  Nominatiivi (type 1), " << std::endl
-              << "  Genitiivi (type 2), " << std::endl
-              << "  Partitiivi (type 3), " << std::endl
-              << "  Akkusatiivi (type 4), " << std::endl
-              << "  Inessiivi (type 5)" << std::endl;
-    std::cin >> Answer.finCase;
-
-    if (1 <= Answer.finCase <= 5) {
-      break;
-    } else {
-      std::cout << std::endl
-                << "That's not a valid input, please try again." << std::endl;
-    }
-  }
-}
-void wordAmountQuestion() {
-  while (true) {
-    std::cout << std::endl
-              << "How many words do you want to practise (there are "
-              << fileSize(Answer.wordTypeString) - 1 << " in the selected category)? " << std::endl;
-    std::cin >> Answer.wordAmount;
-
-    if (Answer.wordAmount >= 0) {
-      break;
-    };
-
-    std::cout << "That's not a valid input, please try again." << std::endl;
-  };
-}
-void randomQuestion() {
-  while (true) {
-    std::string ans;
-    std::cout << std::endl << "Would you like to randomise the word order? ";
-    std::getline(std::cin >> std::ws, ans);
-
-    if (vectorChecker(Vector.yes, ans)) {
-      Answer.random = true;
-      break;
-    } else if (vectorChecker(Vector.no, ans)) {
-      Answer.random = false;
-      break;
-    } else {
-      std::cout << std::endl
-                << "Sorry, I could not understand that. Please re-enter your "
-                   "answer."
-                << std::endl;
-    }
-  };
-}
-
 void standardPractise(int wordTypeInt, bool random, std::string language,
                       int finCase) {
 
@@ -352,11 +347,11 @@ void standardPractise(int wordTypeInt, bool random, std::string language,
   std::fstream file(fileDirecName);
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = fileSize(fileDirecName) - 1;
+    Answer.wordAmount = countLines(fileDirecName) - 1;
   };
 
   int counter = 0;
-  int maxLine = fileSize(fileDirecName);
+  int maxLine = countLines(fileDirecName);
 
   if (Answer.random) {
     while (true) {
@@ -436,7 +431,7 @@ void verbsPractise() {
   case 1:
     tenseFileNamePath = "wordsFiles/verbs/verbsFilePreesens.csv";
     break;
-  case 2: 
+  case 2:
     tenseFileNamePath = "wordsFiles/verbs/verbsFileImperfekti.csv";
     break;
   };
@@ -444,11 +439,11 @@ void verbsPractise() {
   std::fstream fileDirec{tenseFileNamePath};
 
   if (Answer.wordAmount == 0) {
-    Answer.wordAmount = (fileSize(tenseFileNamePath) - 1) * 6;
+    Answer.wordAmount = (countLines(tenseFileNamePath) - 1) * 6;
   };
 
   int counter = 0;
-  int maxLine = fileSize(tenseFileNamePath);
+  int maxLine = countLines(tenseFileNamePath);
 
   while (counter != Answer.wordAmount) {
 

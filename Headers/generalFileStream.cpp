@@ -12,7 +12,7 @@ void seekLine(std::fstream &file, int k) {
   };
 }
 
-int fileSize(std::string fileName) {
+int countLines(std::string fileName) {
   std::fstream file(fileName);
 
   int lineCounter = 0;
