@@ -1,8 +1,6 @@
 #include <fstream>
 #include <string>
 
-int fileSize(std::string filename);
-
 void seekLine(std::fstream &file, int k) {
   file.seekg(std::ios::beg);
 
