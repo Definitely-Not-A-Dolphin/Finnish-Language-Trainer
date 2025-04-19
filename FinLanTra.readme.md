@@ -1,6 +1,6 @@
 Hey look, it's my first big project. This is both a way to practise my Finnish and my C++!
 
-I am a 15 year old (16 if you are reading this after december 20th 2024) boy with a weird obessions for Finand. One of the things that make it up is the urge to learn the finnish language, although it is considered one of the hardest in the world. To practise the language, I could choose between a site that allows you to enter your own words to practise it, or for making my own. The choice was clear.
+I am a 16 year old dude with a weird obession for Finand. One of the things that make it up is the urge to learn the finnish language, although it is considered one of the hardest in the world. To practise the language, I could choose between finding a site that allows you to enter your own words to practise it, or for making my own. The choice was clear.
 
 Things I want to add / fix / get it to work:
 - Practising numbers from 1 to 1000000 without me having to type out every individual one.
