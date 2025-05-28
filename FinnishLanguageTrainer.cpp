@@ -6,7 +6,7 @@
 
 // Headers
 //       "Headers/general/generalFileStream.hpp"
-#include "Headers/csvFileStream.hpp"
+#include "Headers/generalFileLib.hpp"
 #include "Headers/datastructChecker.hpp"
 #include "Headers/randomInt.hpp"
 
@@ -45,11 +45,11 @@ std::vector<std::string> gradeMessage = {
 } // namespace Vector
 
 // Get functions
-std::string getEng(std::fstream &file, int line) {
-  return getElement(file, line, 1);
+std::string getEng(csv_fstream &file, int line) {
+  return file.getElement(line, 1);
 }
-std::string getFin(std::fstream &file, int line, int finCase) {
-  return getElement(file, line, finCase + 1);
+std::string getFin(csv_fstream &file, int line, int finCase) {
+  return file.getElement(line, finCase + 1);
 }
 
 // Questions
@@ -173,7 +173,7 @@ void random() {
 
 // Practice functions
 namespace Practise {
-void eng(std::fstream &file, int line) {
+void eng(csv_fstream &file, int line) {
   std::string wordEng = getEng(file, line);
   std::string wordFin = getFin(file, line, 1);
 
@@ -193,7 +193,7 @@ void eng(std::fstream &file, int line) {
   std::cout << " (" << Score::correct << " / " << Score::incorrect << ")"
             << std::endl;
 }
-void fin(std::fstream &file, int line, int finCase) {
+void fin(csv_fstream &file, int line, int finCase) {
   std::string wordEng = getEng(file, line);
 
   std::string wordFin = getFin(file, line, finCase);
@@ -218,7 +218,7 @@ void fin(std::fstream &file, int line, int finCase) {
 void standard(std::string wordType, bool random, std::string language,
               int finCase) {
 
-  std::fstream readingWordType(wordType);
+  csv_fstream readingWordType(wordType);
 
   int maxLine = countLines(wordType);
 
@@ -258,7 +258,7 @@ void standard(std::string wordType, bool random, std::string language,
       line++;
 
       if (maxLine < line) {
-        seekLine(readingWordType, 2);
+        readingWordType.seekLine(2);
       };
     };
   };
@@ -267,7 +267,7 @@ void standard(std::string wordType, bool random, std::string language,
 }
 void verbs(std::string wordType) {
 
-  std::fstream readingWordType(wordType);
+  csv_fstream readingWordType(wordType);
 
   int maxLine = countLines(wordType);
 
@@ -284,9 +284,9 @@ void verbs(std::string wordType) {
               << "-+======================================+-" << std::endl
               << std::endl;
 
-    std::string pronoun = getElement(readingWordType, 1, pronounInt);
-    std::string verb = getElement(readingWordType, verbInt, 1);
-    std::string verbConj = getElement(readingWordType, verbInt, pronounInt);
+    std::string pronoun = readingWordType.getElement(1, pronounInt);
+    std::string verb = readingWordType.getElement(verbInt, 1);
+    std::string verbConj = readingWordType.getElement(verbInt, pronounInt);
 
     std::string verbConjInput;
     std::cout << "Enter the correct conjugation with the verb " << verb << ": "
@@ -312,7 +312,7 @@ void verbs(std::string wordType) {
 
 // Read Stuff
 void readAboutProgram() {
-  std::fstream readFile("aboutProgram.txt", std::ios::in);
+  _fstream readFile("aboutProgram.txt", std::ios::in);
 
   std::string filler;
 
@@ -351,7 +351,7 @@ void readAboutGrammar() {
       "Nominatiivi", "Genitiivi", "Akkusatiivi", "Partitiivi",
       "Inessiivi",   "Preesens",  "Imperfekti"};
 
-  std::fstream file("readAboutFiles/about" +
+  _fstream file("readAboutFiles/about" +
                     practiseWith.at(practiseInput - 1) + ".txt");
 
   std::string tempString;
