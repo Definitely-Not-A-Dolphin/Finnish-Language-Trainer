@@ -10,4 +10,4 @@ std::string trimWhiteSpace(std::string input) {
   };
 
   return input;
-}
+};

@@ -8,6 +8,7 @@
 #include "Headers/_fstream.hpp"
 #include "Headers/datastructChecker.hpp"
 #include "Headers/randomInt.hpp"
+#include "Headers/trimWhiteSpace.hpp"
 
 namespace Answer {
 int activity;
@@ -46,10 +47,10 @@ std::vector<std::string> gradeMessage = {
 // Get functions
 std::string getEng(csv_fstream &file, int line) {
   return file.getElement(line, 1);
-}
+};
 std::string getFin(csv_fstream &file, int line, int finCase) {
   return file.getElement(line, finCase + 1);
-}
+};
 
 // Questions
 namespace Question {
@@ -173,8 +174,8 @@ void random() {
 // Practice functions
 namespace Practise {
 void eng(csv_fstream &file, int line) {
-  std::string wordEng = getEng(file, line);
-  std::string wordFin = getFin(file, line, 1);
+  std::string wordEng = trimWhiteSpace(getEng(file, line));
+  std::string wordFin = trimWhiteSpace(getFin(file, line, 1));
 
   std::string wordEngInput;
   std::cout << std::endl << "What is the Finnish word for " << wordFin << "? ";
@@ -191,18 +192,17 @@ void eng(csv_fstream &file, int line) {
 
   std::cout << " (" << Score::correct << " / " << Score::incorrect << ")"
             << std::endl;
-}
+};
 void fin(csv_fstream &file, int line, int finCase) {
-  std::string wordEng = getEng(file, line);
-
-  std::string wordFin = getFin(file, line, finCase);
+  std::string wordEng = trimWhiteSpace(getEng(file, line));
+  std::string wordFin = trimWhiteSpace(getFin(file, line, finCase));
 
   std::string wordFinInput;
   std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
   std::getline(std::cin >> std::ws, wordFinInput);
   std::cout << std::endl;
 
-  if (wordFinInput == wordFin) {
+  if (trimWhiteSpace(wordFinInput) == wordFin) {
     Score::correct++;
     std::cout << "Yes! :) ";
   } else {
@@ -212,8 +212,7 @@ void fin(csv_fstream &file, int line, int finCase) {
 
   std::cout << " (" << Score::correct << " / " << Score::incorrect << ")"
             << std::endl;
-}
-
+};
 void standard(std::string wordType, bool random, std::string language,
               int finCase) {
 
@@ -263,7 +262,7 @@ void standard(std::string wordType, bool random, std::string language,
   };
 
   readingWordType.close();
-}
+};
 void verbs(std::string wordType) {
 
   csv_fstream readingWordType(wordType);
@@ -426,7 +425,6 @@ void settingsConfig() {
 };
 
 int main() {
-
   while (true) {
 
     std::cout << std::endl
