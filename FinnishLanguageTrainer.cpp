@@ -5,8 +5,7 @@
 #include <vector>
 
 // Headers
-//       "Headers/general/generalFileStream.hpp"
-#include "Headers/generalFileLib.hpp"
+#include "Headers/_fstream.hpp"
 #include "Headers/datastructChecker.hpp"
 #include "Headers/randomInt.hpp"
 
@@ -68,7 +67,7 @@ void wordType() {
   while (true) {
     std::cin >> Answer::wordTypeInt;
 
-    if (1 <= Answer::wordTypeInt <= 6) {
+    if (1 <= Answer::wordTypeInt && Answer::wordTypeInt <= 6) {
       break;
     };
 
@@ -112,7 +111,7 @@ void finCase() {
 
     std::cin >> Answer::finCase;
 
-    if (1 <= Answer::finCase <= 5) {
+    if (1 <= Answer::finCase && Answer::finCase <= 5) {
       break;
     };
 
@@ -135,7 +134,7 @@ void wordAmount() {
   while (true) {
     std::cin >> Answer::wordAmount;
 
-    if (Answer::wordAmount >= 0) {
+    if (0 <= Answer::wordAmount) {
       break;
     };
 
@@ -229,7 +228,7 @@ void standard(std::string wordType, bool random, std::string language,
   int counter = 1;
 
   if (Answer::random) {
-    for (counter; counter <= Answer::wordAmount; counter++) {
+    for (; counter <= Answer::wordAmount; counter++) {
       int randomNumber = randomInt(2, maxLine);
 
       std::cout << std::endl
@@ -245,7 +244,7 @@ void standard(std::string wordType, bool random, std::string language,
 
     int line = 2;
 
-    for (counter; counter <= Answer::wordAmount; counter++) {
+    for (; counter <= Answer::wordAmount; counter++) {
 
       std::cout << "-+======================================+-" << std::endl;
 
@@ -338,7 +337,7 @@ void readAboutGrammar() {
   while (true) {
     std::cin >> practiseInput;
 
-    if (0 <= practiseInput <= 7) {
+    if (0 <= practiseInput && practiseInput <= 7) {
       break;
     };
 
@@ -351,8 +350,8 @@ void readAboutGrammar() {
       "Nominatiivi", "Genitiivi", "Akkusatiivi", "Partitiivi",
       "Inessiivi",   "Preesens",  "Imperfekti"};
 
-  _fstream file("readAboutFiles/about" +
-                    practiseWith.at(practiseInput - 1) + ".txt");
+  _fstream file("readAboutFiles/about" + practiseWith.at(practiseInput - 1) +
+                ".txt");
 
   std::string tempString;
 
@@ -396,7 +395,8 @@ void settingsConfig() {
     std::cout << "Your grade is " << grade << "/10; "
               << Vector::gradeMessage.at((int)(grade / 2)) << std::endl;
 
-    Score::correct, Score::incorrect = 0;
+    Score::correct = 0;
+    Score::incorrect = 0;
 
     std::string continuePractisingInput;
     std::cout << std::endl << "Do you want to continue pracising? ";
@@ -442,7 +442,7 @@ int main() {
     while (true) {
       std::cin >> Answer::activity;
 
-      if (0 <= Answer::activity <= 3) {
+      if (0 <= Answer::activity && Answer::activity <= 3) {
         break;
       };
 
