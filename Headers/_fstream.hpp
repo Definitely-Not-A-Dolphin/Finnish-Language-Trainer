@@ -87,13 +87,17 @@ int countLines(std::string fileName) {
 };
 
 struct _fstream : std::fstream {
+protected:
   std::string fileName;
 
+public:
   _fstream(std::string fileNameIn,
            ios_base::openmode mode = ios_base::in | ios_base::out)
       : std::fstream(fileNameIn, mode) {
     fileName = fileNameIn;
   };
+
+  std::string getFileName() { return fileName; };
 
   bool open(std::string fileNameIn,
             ios_base::openmode mode = ios_base::in | ios_base::out) {

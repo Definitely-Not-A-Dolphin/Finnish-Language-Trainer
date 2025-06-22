@@ -1,3 +1,4 @@
+#include <array>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -14,6 +15,8 @@ namespace Answer {
 int activity;
 std::string wordTypeFile;
 int wordTypeInt;
+int wordTheme;
+std::string wordThemeString;
 std::string language;
 int finCase;
 double wordAmount;
@@ -35,6 +38,9 @@ std::vector<std::string> language = {"Finnish", "finnish", "English",
 std::vector<std::string> wordTypeFile = {
     "1adjectives", "2nouns",          "3numbers",
     "4pronouns",   "verbs/5preesens", "verbs/6imperfekti"};
+std::vector<std::string, 9> wordTheme = {"general",   "places",  "nature",
+                                        "body",      "time",    "people",
+                                        "countries", "digital", "other"};
 std::vector<std::string> gradeMessage = {
     "This is too hard for you. Have you considered Swedish?",
     "Were you even trying?",
@@ -80,6 +86,36 @@ void wordType() {
 
   Answer::wordTypeFile =
       "wordsFiles/" + Vector::wordTypeFile.at(Answer::wordTypeInt - 1) + ".csv";
+}
+void wordTheme() {
+
+  std::cout << std::endl
+            << "What theme would you like to practise? " << std::endl
+            << "  General (type 1), " << std::endl
+            << "  Places (type 2), " << std::endl
+            << "  Nature (type 3), " << std::endl
+            << "  Body (type 4), " << std::endl
+            << "  Time (type 5), " << std::endl
+            << "  Places (type 6), " << std::endl
+            << "  Countries (type 7), " << std::endl
+            << "  Digital (type 8), " << std::endl
+            << "  Other (type 9), " << std::endl;
+
+  while (true) {
+    std::cin >> Answer::wordTheme;
+
+    if (1 <= Answer::wordTypeInt && Answer::wordTypeInt <= 8) {
+      break;
+    };
+
+    std::cout << std::endl
+              << "Sorry, I could not understand that. Please re-enter your "
+                 "answer."
+              << std::endl;
+  };
+
+  Answer::wordThemeString = Vector::wordTheme.at(Answer::wordTheme - 1);
+  std::cout << Answer::wordThemeString << std::endl;
 }
 void language() {
 
@@ -193,9 +229,13 @@ void eng(csv_fstream &file, int line) {
   std::cout << " (" << Score::correct << " / " << Score::incorrect << ")"
             << std::endl;
 };
-void fin(csv_fstream &file, int line, int finCase) {
-  std::string wordEng = trimWhiteSpace(getEng(file, line));
-  std::string wordFin = trimWhiteSpace(getFin(file, line, finCase));
+void fin(csv_fstream &file, int line, int column) {
+  std::string wordEng = trimWhiteSpace(
+      // Get English word
+      file.getElement(line, 1));
+  std::string wordFin = trimWhiteSpace(
+      // Get Finnish word
+      file.getElement(line, column));
 
   std::string wordFinInput;
   std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
@@ -262,6 +302,74 @@ void standard(std::string wordType, bool random, std::string language,
   };
 
   readingWordType.close();
+};
+void nouns() {
+
+  csv_fstream readNoun("wordsFiles/2nouns.csv");
+
+  const int maxLine = countLines(readNoun.getFileName());
+  int minimal;
+  int maximal;
+  std::string thing;
+
+  for (int i = 2; i <= maxLine - 1; i++) {
+    if (trimWhiteSpace(readNoun.getElement(i, 2)) == Answer::wordThemeString) {
+      std::cout << "minimal found " << i << std::endl;
+      minimal = i;
+      break;
+    }
+  }
+
+  for (int i = minimal; i <= maxLine - 1; i++) {
+    if (trimWhiteSpace(readNoun.getElement(i, 2)) != Answer::wordThemeString) {
+      std::cout << "maximal found " << i << std::endl;
+      maximal = i - 1;
+      break;
+    }
+  }
+
+  if (Answer::wordAmount == 0) {
+    Answer::wordAmount = maxLine - 1;
+  };
+
+  int counter = 1;
+
+  if (Answer::random) {
+    for (; counter <= Answer::wordAmount; counter++) {
+      int randomNumber = randomInt(minimal, maximal);
+
+      std::cout << std::endl
+                << "-+======================================+-" << std::endl;
+
+      if (Answer::language == "English" or Answer::language == "english") {
+        Practise::eng(readNoun, randomNumber);
+      } else {
+        Practise::fin(readNoun, randomNumber, Answer::finCase + 1);
+      };
+    };
+  } else {
+
+    int line = 2;
+
+    for (; counter <= Answer::wordAmount; counter++) {
+
+      std::cout << "-+======================================+-" << std::endl;
+
+      if (Answer::language == "English" or Answer::language == "english") {
+        Practise::eng(readNoun, line);
+      } else {
+        Practise::fin(readNoun, line, Answer::finCase);
+      };
+
+      line++;
+
+      if (maximal < line) {
+        readNoun.seekLine(minimal);
+      };
+    };
+  };
+
+  readNoun.close();
 };
 void verbs(std::string wordType) {
 
@@ -381,6 +489,11 @@ void settingsConfig() {
     };
 
     Question::wordAmount();
+
+    if (Answer::wordTypeInt == 2) {
+      Question::wordTheme();
+      Practise::nouns();
+    }
 
     if (Answer::wordTypeInt <= 4) {
       Practise::standard(Answer::wordTypeFile, Answer::random, Answer::language,
