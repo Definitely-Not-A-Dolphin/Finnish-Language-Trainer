@@ -1,49 +1,37 @@
-#include "../Headers/randomInt.hpp"
 #include "../Headers/_fstream.hpp"
+#include "../Headers/randomInt.hpp"
 #include "../Headers/trimWhiteSpace.hpp"
 
 namespace Practise {
-void single(csv_fstream &file, std::string language, int line = 1, int column = 2) {
+void fin(csv_fstream &file, int line = 1, int finCase = 2) {
   std::string wordEng = trimWhiteSpace(
       // Get English word
-      file.getElement(line, 1)
-  );
+      file.getElement(line, 1));
   std::string wordFin = trimWhiteSpace(
       // Get Finnish word
-      file.getElement(line, column)
-  );
+      file.getElement(line, finCase + 1));
+  std::cout << wordEng << std::endl << wordFin << std::endl;
 
   std::string wordInput;
-  if (language == "finnish" or language == "Finnish") {
-    std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
-  } else {
-    std::cout << std::endl << "What is the English word for " << wordFin << "? ";
-  };
+  std::cout << std::endl << "What is the Finnish word for " << wordEng << "? ";
+
   std::getline(std::cin >> std::ws, wordInput);
   std::cout << std::endl;
 
-  if (language == "finnish" or language == "Finnish") {
-    if (trimWhiteSpace(wordInput) == wordFin) {
-      std::cout << "Yes! :) " << std::endl;
-    } else {
-      std::cout << "No :( The correct word was " << wordFin << std::endl;
-    };
+  if (trimWhiteSpace(wordInput) == wordFin) {
+    std::cout << "Yes! :) " << std::endl;
   } else {
-    if (trimWhiteSpace(wordInput) == wordEng) {
-      std::cout << "Yes! :) " << std::endl;
-    } else {
-      std::cout << "No :( The correct word was " << wordEng << std::endl;
-    };
-  }
+    std::cout << "No :( The correct word was " << wordFin << std::endl;
+  };
 
   // std::cout << " (" << Score::correct << " / " << Score::incorrect << ")"
   //           << std::endl;
 };
-void standard(std::string fileName, std::string language, int wordAmount) {
+void standard(std::string fileName, int wordAmount, int finCase = 2) {
 
   csv_fstream readFile(fileName);
 
-  int maxLine = countLines(readFile.getFileName());
+  int maxLine = countLines(fileName);
 
   if (wordAmount == 0) {
     wordAmount = maxLine - 1;
@@ -51,14 +39,14 @@ void standard(std::string fileName, std::string language, int wordAmount) {
 
   int counter = 1;
 
-    for (; counter <= wordAmount; counter++) {
-      int randomNumber = randomInt(2, maxLine);
+  for (; counter <= wordAmount; counter++) {
+    int randomNumber = randomInt(2, maxLine);
 
-      std::cout << std::endl
-                << "-+======================================+-" << std::endl;
+    std::cout << std::endl
+              << "-+======================================+-" << std::endl;
 
-      Practise::single(readFile, language, randomNumber);
-    };
+    Practise::fin(readFile, randomNumber, finCase);
+  };
 
   readFile.close();
 };
@@ -106,28 +94,30 @@ void verbs( Komt later wel ) {
 
   readingWordType.close();
 }; */
-void nouns(std::string language, int wordAmount, int finCase, std::string wordTheme) {
+void nouns(int wordAmount, std::string wordTheme = "any", int finCase = 2) {
 
   csv_fstream readNoun("wordsFiles/2nouns.csv");
-
   const int maxLine = countLines("wordsFiles/2nouns.csv");
-  int minimal;
-  int maximal;
-  std::string thing;
 
-  for (int i = 2; i <= maxLine - 1; i++) {
-    if (trimWhiteSpace(readNoun.getElement(i, 2)) == wordTheme) {
-      std::cout << "minimal found " << i << std::endl;
-      minimal = i;
-      break;
+  int minimal = 2;
+  int maximal = maxLine;
+
+  if (wordTheme != "any") {
+    std::string thing;
+    for (int i = 2; i <= maxLine - 1; i++) {
+      if (trimWhiteSpace(readNoun.getElement(i, 2)) == wordTheme) {
+        std::cout << "minimal found " << i << std::endl;
+        minimal = i;
+        break;
+      }
     }
-  }
 
-  for (int i = minimal; i <= maxLine - 1; i++) {
-    if (trimWhiteSpace(readNoun.getElement(i, 2)) != wordTheme) {
-      std::cout << "maximal found " << i << std::endl;
-      maximal = i - 1;
-      break;
+    for (int i = minimal; i <= maxLine - 1; i++) {
+      if (trimWhiteSpace(readNoun.getElement(i, 2)) != wordTheme) {
+        std::cout << "maximal found " << i - 1 << std::endl;
+        maximal = i - 1;
+        break;
+      }
     }
   }
 
@@ -142,9 +132,8 @@ void nouns(std::string language, int wordAmount, int finCase, std::string wordTh
     std::cout << std::endl
               << "-+======================================+-" << std::endl;
 
-    Practise::single(readNoun, language, randomNumber, finCase + 2);
+    Practise::fin(readNoun, randomNumber, finCase + 1);
   };
-
 
   readNoun.close();
 };

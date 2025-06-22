@@ -1,5 +1,5 @@
-#include <iostream>
 #include <array>
+#include <iostream>
 #include <string>
 
 namespace Question {
@@ -31,21 +31,16 @@ int wordType() {
 std::string wordTheme() {
   int wordThemeInt;
 
-  std::array<std::string, 9> wordTheme = {"general",   "places",  "nature",
-                                          "body",      "time",    "people",
-                                          "countries", "digital", "other"};
+  std::array<std::string, 10> wordTheme = {
+      "general", "places",    "nature",  "body",  "time",
+      "people",  "countries", "digital", "other", "any"};
 
   std::cout << std::endl
-            << "What theme would you like to practise? " << std::endl
-            << "  General (type 1), " << std::endl
-            << "  Places (type 2), " << std::endl
-            << "  Nature (type 3), " << std::endl
-            << "  Body (type 4), " << std::endl
-            << "  Time (type 5), " << std::endl
-            << "  Places (type 6), " << std::endl
-            << "  Countries (type 7), " << std::endl
-            << "  Digital (type 8), " << std::endl
-            << "  Other (type 9), " << std::endl;
+            << "What theme would you like to practise? " << std::endl;
+  for (int i = 1; i <= wordTheme.size(); i++) {
+    std::cout << "  " << wordTheme.at(i - 1) << " (type " << i << ")"
+              << std::endl;
+  }
 
   while (true) {
     std::cin >> wordThemeInt;
@@ -70,14 +65,18 @@ std::string language() {
   while (true) {
     std::getline(std::cin >> std::ws, language);
 
-    if (language == "Finnish" || language == "finnish") { return "finnish"; };
-    if (language == "English" || language == "english") { return "english"; };
+    if (language == "Finnish" || language == "finnish") {
+      return "finnish";
+    };
+    if (language == "English" || language == "english") {
+      return "english";
+    };
 
     std::cout << std::endl
               << "Sorry, I could not understand that. Please try again:"
               << std::endl;
   };
-}
+};
 int finCase() {
   int finCaseInt;
 
@@ -100,7 +99,7 @@ int finCase() {
     std::cout << std::endl
               << "That's not a valid input, please try again." << std::endl;
   }
-}
+};
 int wordAmount() {
   int wordAmount;
 

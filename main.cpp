@@ -4,8 +4,8 @@
 #include "SpecificHeaders/question.hpp"
 
 #include <array>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 namespace Answer {
 int finCase;
@@ -22,18 +22,17 @@ std::string language;
 
 namespace dataStruct {
 std::vector<std::string> negative = {"No",  "no",  "Nah", "nah", "Nei",
-                                        "nei", "Nee", "nee", "N",   "n"};
-std::vector<std::string> positive = {"Yes", "yes", "Yeah", "yeah",
-                                        "Yea", "yea", "Ye",   "ye",
-                                        "Ja",  "ja",  "Y",    "y"};
+                                     "nei", "Nee", "nee", "N",   "n"};
+std::vector<std::string> positive = {"Yes", "yes", "Yeah", "yeah", "Yea", "yea",
+                                     "Ye",  "ye",  "Ja",   "ja",   "Y",   "y"};
 std::vector<std::string> language = {"Finnish", "finnish", "English",
-                                       "english"};
+                                     "english"};
 std::vector<std::string> wordTypeFile = {
     "1adjectives", "2nouns",          "3numbers",
     "4pronouns",   "verbs/5preesens", "verbs/6imperfekti"};
-std::vector<std::string> wordTheme = {"general",   "places",  "nature",
-                                        "body",      "time",    "people",
-                                        "countries", "digital", "other"};
+std::vector<std::string> wordTheme = {
+    "general", "places",    "nature",  "body",  "time",
+    "people",  "countries", "digital", "other", "any"};
 std::vector<std::string> gradeMessage = {
     "This is too hard for you. Have you considered Swedish?",
     "Were you even trying?",
@@ -45,14 +44,26 @@ std::vector<std::string> gradeMessage = {
 
 int main() {
 
-  std::cout << "Here we go again: V5.0.0" << std::endl;
+  while (true) {
+    std::cout << "Here we go again: V5.0.0" << std::endl;
 
-  Answer::wordAmount = Question::wordAmount();
-  Answer::wordType = Question::wordType();
-  Answer::readFromFile = "wordsFiles/" + dataStruct::wordTypeFile.at(Answer::wordType - 1) + ".csv";
-  Answer::language = Question::language();
+    Answer::wordAmount = Question::wordAmount();
+    Answer::wordType = Question::wordType();
+    Answer::readFromFile = "wordsFiles/" +
+                           dataStruct::wordTypeFile.at(Answer::wordType - 1) +
+                           ".csv";
+    Answer::finCase = Question::finCase();
 
-  Practise::standard(Answer::readFromFile, Answer::language, Answer::wordAmount);
+    if (Answer::wordType == 2) {
+      Answer::wordThemeString = Question::wordTheme();
+      Practise::nouns(Answer::wordAmount, Answer::wordThemeString,
+                      Answer::finCase);
+      continue;
+    };
+
+    Practise::standard(Answer::readFromFile, Answer::wordAmount,
+                       Answer::finCase);
+  }
 
   return 0;
 }
