@@ -3,6 +3,23 @@
 #include <string>
 
 namespace Question {
+int wordAmount() {
+  int wordAmount;
+
+  std::cout << std::endl << "How many words do you want to practise? ";
+
+  while (true) {
+    std::cin >> wordAmount;
+
+    if (0 <= wordAmount) {
+      return wordAmount;
+    };
+
+    std::cout << std::endl
+              << "That's not a valid input, please try again." << std::endl
+              << std::endl;
+  };
+}
 int wordType() {
   int wordTypeInt;
 
@@ -35,8 +52,7 @@ std::string wordTheme() {
       "general", "places",    "nature",  "body",  "time",
       "people",  "countries", "digital", "other", "any"};
 
-  std::cout << std::endl
-            << "What theme would you like to practise? " << std::endl;
+  std::cout << std::endl << "What theme would you like to practise? ";
   for (int i = 1; i <= wordTheme.size(); i++) {
     std::cout << "  " << wordTheme.at(i - 1) << " (type " << i << ")"
               << std::endl;
@@ -45,7 +61,7 @@ std::string wordTheme() {
   while (true) {
     std::cin >> wordThemeInt;
 
-    if (1 <= wordThemeInt && wordThemeInt <= 9) {
+    if (1 <= wordThemeInt && wordThemeInt <= 10) {
       return wordTheme.at(wordThemeInt - 1);
     };
 
@@ -100,21 +116,4 @@ int finCase() {
               << "That's not a valid input, please try again." << std::endl;
   }
 };
-int wordAmount() {
-  int wordAmount;
-
-  std::cout << std::endl
-            << "How many words do you want to practise? " << std::endl;
-
-  while (true) {
-    std::cin >> wordAmount;
-
-    if (0 <= wordAmount) {
-      return wordAmount;
-    };
-
-    std::cout << std::endl
-              << "That's not a valid input, please try again." << std::endl;
-  };
-}
 } // namespace Question

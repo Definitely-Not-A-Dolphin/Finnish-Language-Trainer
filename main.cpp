@@ -20,6 +20,8 @@ int wordAmount;
 std::string language;
 } // namespace Answer
 
+double grade;
+
 namespace dataStruct {
 std::vector<std::string> negative = {"No",  "no",  "Nah", "nah", "Nei",
                                      "nei", "Nee", "nee", "N",   "n"};
@@ -47,22 +49,40 @@ int main() {
   while (true) {
     std::cout << "Here we go again: V5.0.0" << std::endl;
 
+    std::cout << std::endl
+              << "-+======================================+-" << std::endl;
     Answer::wordAmount = Question::wordAmount();
+
+    std::cout << std::endl
+              << "-+======================================+-" << std::endl;
     Answer::wordType = Question::wordType();
     Answer::readFromFile = "wordsFiles/" +
                            dataStruct::wordTypeFile.at(Answer::wordType - 1) +
                            ".csv";
-    Answer::finCase = Question::finCase();
 
+    if (Answer::wordType == 5 || Answer::wordType == 6) {
+      std::cout << std::endl
+                << "-+======================================+-" << std::endl;
+      Practise::verbs(Answer::readFromFile, Answer::wordAmount);
+    }
+
+    std::cout << std::endl
+              << "-+======================================+-" << std::endl;
+    Answer::language = Question::language();
+    if (Answer::language == "english") {
+      std::cout << std::endl
+                << "-+======================================+-" << std::endl;
+      Answer::finCase = Question::finCase();
+    }
     if (Answer::wordType == 2) {
       Answer::wordThemeString = Question::wordTheme();
-      Practise::nouns(Answer::wordAmount, Answer::wordThemeString,
-                      Answer::finCase);
+      Practise::nouns(Answer::wordAmount, Answer::language,
+                      Answer::wordThemeString, Answer::finCase);
       continue;
     };
 
-    Practise::standard(Answer::readFromFile, Answer::wordAmount,
-                       Answer::finCase);
+    Practise::standard(Answer::readFromFile, Answer::language,
+                       Answer::wordAmount, Answer::finCase);
   }
 
   return 0;
