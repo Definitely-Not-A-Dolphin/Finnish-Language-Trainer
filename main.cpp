@@ -75,8 +75,7 @@ int main() {
     };
 
     grade = Practise::standard(Answer::readFromFile, Answer::language,
-                               Answer::wordAmount, Answer::finCase);
-    grade *= 10;
+                               Answer::wordAmount, Answer::finCase) * 10;
 
     std::cout << "Your grade is " << grade << "/10"
               << " " << dataStruct::gradeMessage.at((int)(grade / 2))
