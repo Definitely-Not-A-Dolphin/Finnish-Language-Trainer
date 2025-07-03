@@ -1,5 +1,4 @@
 #include "Headers/datastructChecker.hpp"
-
 #include "SpecificHeaders/practise.hpp"
 #include "SpecificHeaders/question.hpp"
 
@@ -18,6 +17,8 @@ std::string readFromFile;
 
 int wordAmount;
 std::string language;
+
+std::string continueing;
 } // namespace Answer
 
 double grade;
@@ -46,44 +47,59 @@ std::vector<std::string> gradeMessage = {
 
 int main() {
 
-  while (true) {
-    std::cout << "Here we go again: V5.0.0" << std::endl;
+  std::cout << "Here we go again: V5.0.0" << std::endl << std::endl;
 
-    std::cout << std::endl
-              << "-+======================================+-" << std::endl;
+  while (true) {
     Answer::wordAmount = Question::wordAmount();
 
-    std::cout << std::endl
-              << "-+======================================+-" << std::endl;
     Answer::wordType = Question::wordType();
     Answer::readFromFile = "wordsFiles/" +
                            dataStruct::wordTypeFile.at(Answer::wordType - 1) +
                            ".csv";
 
     if (Answer::wordType == 5 || Answer::wordType == 6) {
-      std::cout << std::endl
-                << "-+======================================+-" << std::endl;
-      Practise::verbs(Answer::readFromFile, Answer::wordAmount);
-    }
-
-    std::cout << std::endl
-              << "-+======================================+-" << std::endl;
-    Answer::language = Question::language();
-    if (Answer::language == "english") {
-      std::cout << std::endl
-                << "-+======================================+-" << std::endl;
-      Answer::finCase = Question::finCase();
-    }
-    if (Answer::wordType == 2) {
-      Answer::wordThemeString = Question::wordTheme();
-      Practise::nouns(Answer::wordAmount, Answer::language,
-                      Answer::wordThemeString, Answer::finCase);
+      grade = Practise::verbs(Answer::readFromFile, Answer::wordAmount);
       continue;
     };
 
-    Practise::standard(Answer::readFromFile, Answer::language,
-                       Answer::wordAmount, Answer::finCase);
-  }
+    Answer::language = Question::language();
+    if (Answer::language == "finnish") {
+      Answer::finCase = Question::finCase();
+    };
+
+    if (Answer::wordType == 2) {
+      Answer::wordThemeString = Question::wordTheme();
+      grade = Practise::nouns(Answer::wordAmount, Answer::language,
+                              Answer::wordThemeString, Answer::finCase);
+      continue;
+    };
+
+    grade = Practise::standard(Answer::readFromFile, Answer::language,
+                               Answer::wordAmount, Answer::finCase);
+    grade *= 10;
+
+    std::cout << "Your grade is " << grade << "/10"
+              << " " << dataStruct::gradeMessage.at((int)(grade / 2))
+              << std::endl
+              << std::endl
+              << "Would you like to continue practising? ";
+
+    while (true) {
+      std::getline(std::cin >> std::ws, Answer::continueing);
+
+      if (vectorChecker(dataStruct::negative, Answer::continueing) ||
+          vectorChecker(dataStruct::positive, Answer::continueing)) {
+        break;
+      };
+    };
+
+    if (vectorChecker(dataStruct::negative, Answer::continueing)) {
+      break;
+    };
+
+    grade = 0;
+    Answer::continueing = "";
+  };
 
   return 0;
 }

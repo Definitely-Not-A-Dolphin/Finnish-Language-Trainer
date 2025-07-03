@@ -90,7 +90,7 @@ double standard(std::string fileName, std::string language, int wordAmount,
               << "-+======================================+-" << std::endl;
 
     if (language == "finnish") {
-      Practise::fin(readFile, randomNumber, finCase + 1);
+      Practise::fin(readFile, randomNumber, finCase);
     } else {
       Practise::eng(readFile, randomNumber);
     };

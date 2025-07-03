@@ -4,72 +4,71 @@
 
 namespace Question {
 int wordAmount() {
+  std::cout << std::endl
+            << "-+======================================+-" << std::endl;
   int wordAmount;
 
   std::cout << std::endl << "How many words do you want to practise? ";
 
-  while (true) {
-    std::cin >> wordAmount;
-
-    if (0 <= wordAmount) {
-      return wordAmount;
-    };
-
-    std::cout << std::endl
-              << "That's not a valid input, please try again." << std::endl
-              << std::endl;
+  while (!(std::cin >>
+           wordAmount)) { // Keep asking until the user enters a valid number
+    std::cout << std::endl << "That's not a valid input, please try again. ";
+    std::cin.clear();             // Reset input errors
+    std::cin.ignore(10000, '\n'); // Remove bad input
   };
+
+  return wordAmount;
 }
 int wordType() {
+  std::cout << std::endl
+            << "-+======================================+-" << std::endl;
   int wordTypeInt;
 
+  std::array<std::string, 6> wordTheme = {
+      "Adjectives",          "Nouns",           "Numbers", "Pronouns",
+      "Verbs present tense", "Verbs past tense"};
+
   std::cout << std::endl
-            << "What type of word would you like to practise? " << std::endl
-            << "  Adjectives (type 1), " << std::endl
-            << "  Nouns (type 2), " << std::endl
-            << "  Numbers (type 3), " << std::endl
-            << "  Pronouns (type 4), " << std::endl
-            << "  Verbs present tense (type 5), " << std::endl
-            << "  Verbs past tense (type 6), " << std::endl;
-
-  while (true) {
-    std::cin >> wordTypeInt;
-
-    if (1 <= wordTypeInt && wordTypeInt <= 6) {
-      return wordTypeInt;
-    };
-
-    std::cout << std::endl
-              << "Sorry, I could not understand that. Please re-enter your "
-                 "answer."
+            << "What theme would you like to practise? " << std::endl;
+  for (int i = 1; i <= wordTheme.size(); i++) {
+    std::cout << "  " << wordTheme.at(i - 1) << " (type " << i << ")"
               << std::endl;
+  }
+
+  while (!(std::cin >> wordTypeInt) && 1 <= wordTypeInt &&
+         wordTypeInt <= 6) { // Keep asking until the user enters a valid number
+    std::cout << std::endl << "That's not a valid input, please try again. ";
+    std::cin.clear();             // Reset input errors
+    std::cin.ignore(10000, '\n'); // Remove bad input
   };
+
+  return wordTypeInt;
 }
 std::string wordTheme() {
+  std::cout << std::endl
+            << "-+======================================+-" << std::endl;
   int wordThemeInt;
 
   std::array<std::string, 10> wordTheme = {
       "general", "places",    "nature",  "body",  "time",
       "people",  "countries", "digital", "other", "any"};
 
-  std::cout << std::endl << "What theme would you like to practise? ";
+  std::cout << std::endl
+            << "What theme would you like to practise? " << std::endl;
   for (int i = 1; i <= wordTheme.size(); i++) {
     std::cout << "  " << wordTheme.at(i - 1) << " (type " << i << ")"
               << std::endl;
   }
 
-  while (true) {
-    std::cin >> wordThemeInt;
-
-    if (1 <= wordThemeInt && wordThemeInt <= 10) {
-      return wordTheme.at(wordThemeInt - 1);
-    };
-
-    std::cout << std::endl
-              << "Sorry, I could not understand that. Please re-enter your "
-                 "answer."
-              << std::endl;
+  while (!(std::cin >> wordThemeInt) && 1 <= wordThemeInt &&
+         wordThemeInt <=
+             10) { // Keep asking until the user enters a valid number
+    std::cout << std::endl << "That's not a valid input, please try again. ";
+    std::cin.clear();             // Reset input errors
+    std::cin.ignore(10000, '\n'); // Remove bad input
   };
+
+  return wordTheme.at(wordThemeInt - 1);
 }
 std::string language() {
   std::string language;
@@ -94,6 +93,8 @@ std::string language() {
   };
 };
 int finCase() {
+  std::cout << std::endl
+            << "-+======================================+-" << std::endl;
   int finCaseInt;
 
   std::cout << std::endl
@@ -104,16 +105,13 @@ int finCase() {
             << "  Akkusatiivi (type 4), " << std::endl
             << "  Inessiivi (type 5)" << std::endl;
 
-  while (true) {
+  while (!(std::cin >> finCaseInt) && 1 <= finCaseInt &&
+         finCaseInt <= 5) { // Keep asking until the user enters a valid number
+    std::cout << std::endl << "That's not a valid input, please try again. ";
+    std::cin.clear();             // Reset input errors
+    std::cin.ignore(10000, '\n'); // Remove bad input
+  };
 
-    std::cin >> finCaseInt;
-
-    if (1 <= finCaseInt && finCaseInt <= 5) {
-      return finCaseInt;
-    };
-
-    std::cout << std::endl
-              << "That's not a valid input, please try again." << std::endl;
-  }
+  return finCaseInt;
 };
 } // namespace Question
