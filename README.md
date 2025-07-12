@@ -1,20 +1,14 @@
-<h2 class="nob not project">Finnish Language Trainer</h2>
+Hey look, it's my first big project. This is both a way to practise my Finnish and my C++!
 
-<p class="not">
-  I learn Finnish, and I also like C++ (counter arguments will not be
-  listened to), so I combined the two to make the Finnish Language Trainer.
-</p>
-<p class="nob not">
-  Some things that I wish to include / add in the future are:
-</p>
-<ul class="nob not">
-  <li>
-    Colors, since everything happens in the terminal, colors can help
-    organising all the text, and it looks aesthetically pleasing.
-  </li>
-  <li>More grammar explainations.</li>
-  <li>
-    A way to practise numbers up to a million, but without having to type
-    the first million numbers out in a file.
-  </li>
-</ul>
+I am a 16 year old dude with a weird obession for Finand. One of the things that make it up is the urge to learn the finnish language, although it is considered one of the hardest in the world. To practise the language, I could choose between finding a site that allows you to enter your own words to practise it, or for making my own. The choice was clear.
+
+Things I want to add / fix / get it to work:
+- Practising numbers from 1 to 1000000 without me having to type out every individual one.
+- My-answer-was-correct button. If you think that I made a mistake with the words or anything like that, a temporary solution is a way to tell the program you know it better than it does. Also just send me a message via Slack so I will fix it as soon as I can!
+- More that I can't think of now
+
+If I can figure out how it works, I would love to have it its own screen (if you know what I mean) instead of doing stuff in the terminal.
+
+If there is a bug, or if I just made a mistake with the language itself, remember että minä en puhua suvujaa Suomea ja olen ihminen (I am not fluent in Finnish, and I am a human), so just tap my figurative shoulder and I will fix it!
+
+Bye!

@@ -1,8 +1,8 @@
 #include "Headers/datastructChecker.hpp"
 #include "SpecificHeaders/practise.hpp"
 #include "SpecificHeaders/question.hpp"
+#include "SpecificHeaders/reading.hpp"
 
-#include <array>
 #include <iostream>
 #include <vector>
 
@@ -50,6 +50,27 @@ int main() {
   std::cout << "Here we go again: V5.0.0" << std::endl << std::endl;
 
   while (true) {
+
+    int activity;
+    std::cout << "What would you like to do?" << std::endl
+              << "\tPractise (type 1)" << std::endl
+              << "\tRead grammar (type 2)" << std::endl
+              << "\tQuit (type 0)" << std::endl;
+
+    if (activity == 0) {
+      return 0;
+    };
+    if (activity == 2) {
+      readGrammer();
+      continue;
+    }
+
+    while(!(std::cin >> activity)) {
+      std::cout << std::endl << "That's not a valid input, please try again. ";
+      std::cin.clear();
+      std::cin.ignore(10000, '\n');
+    }
+
     Answer::wordAmount = Question::wordAmount();
 
     Answer::wordType = Question::wordType();
